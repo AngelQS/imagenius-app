@@ -1,0 +1,248 @@
+@media (min-width: 1200px) {
+  .publication {
+    max-width: 600px;
+    min-width: 600px;
+    border: 1px solid #dbdbdb;
+    border-radius: 2.5px;
+  }
+}
+
+@media (min-width: 768px) {
+  .publication {
+    max-width: 600px;
+    min-width: 600px;
+    border: 1px solid #dbdbdb;
+    border-radius: 2.5px;
+  }
+}
+
+.container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.publication-username {
+  font-size: 14px;
+  font-weight: bold;
+  color: #212529;
+}
+
+.publication-location {
+  font-size: 12px;
+  font-weight: lighter;
+}
+
+.publication-content {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.heart-icon {
+  font-size: 20px;
+}
+
+.comment-icon {
+  font-size: 20px;
+}
+
+.publication-details-description {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.publication-details-user {
+  font-size: 14px;
+  font-weight: bold;
+  color: #212529;
+}
+
+.publication-time-text {
+  font-size: 10.7px;
+  text-transform: uppercase;
+  font-weight: lighter;
+}
+
+.profile-activity-publication-icons {
+  font-size: 70px;
+  color: #0ea0ff;
+}
+
+.explore-title {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.d-md-flex.justify-content-md-start.explore-user-name {
+  font-size: 13px;
+  font-weight: bold;
+  color: #212529;
+}
+
+.d-md-flex.justify-content-md-start.explore-user-fullname {
+  font-size: 14px;
+  text-transform: capitalize;
+  font-weight: lighter;
+}
+
+.d-md-flex.justify-content-md-start.explore-user-detail-of-suggestion {
+  font-size: 12px;
+  font-weight: lighter;
+}
+
+.btn.btn-primary.follow-button {
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+.d-md-flex.justify-content-md-start.activity-context {
+  font-size: 14px;
+  font-weight: lighter;
+}
+
+.activity-context-time {
+  font-size: 14px;
+  font-weight: lighter;
+  color: #a0a0a0;
+}
+
+.publication-buttons {
+  background-color: #ffffff;
+  color: #212529;
+  border: 0px;
+  border-radius: 0px;
+}
+
+.publication-buttons:hover {
+  color: #212529;
+}
+
+.publication-content {
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+}
+
+.publication-container-username {
+  font-size: 14px !important;
+  font-weight: bold !important;
+  color: #212529;
+}
+
+.publication-container-follow-button {
+  font-size: 14px;
+  font-weight: bold;
+  color: #212529 !important;
+  background-color: #ffffff;
+  border: none;
+}
+
+.publication-container-separator {
+  color: #212529;
+  font-weight: bold !important;
+}
+
+.publication-container {
+  border-bottom: 1px solid #efefef;
+}
+
+.publication-container-user-comment {
+  font-size: 14px !important;
+  color: #212529;
+}
+
+.publication-container-user-name {
+  font-weight: bold;
+}
+
+.publication-container-time {
+  font-size: 10.7px !important;
+  text-transform: uppercase;
+  font-weight: lighter;
+}
+
+.comments-group {
+  overflow-y: scroll;
+}
+
+@media (min-width: 300px) {
+  .publication-content {
+    max-width: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .publication-content {
+    max-width: none;
+  }
+}
+
+@media (min-width: 576px) {
+  .publication-content {
+    max-width: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .publication-content {
+    max-width: none;
+  }
+}
+
+@media (min-width: 1200px) {
+  .publication-content {
+    min-width: 335px;
+    max-width: 335px;
+  }
+}
+
+.publications-buttons {
+  border-top: 1px solid #efefef;
+}
+
+.publication-trend-text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.publication-trend-content {
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+.publication-insert-comment-container {
+  border-top: 1px solid #efefef;
+  justify-content: space-between !important;
+}
+
+.publication-text-input {
+  border: none;
+}
+
+.publication-text-input-button {
+  background-color: #ffffff;
+  color: #3897f0;
+  border: none;
+}
+
+@media (min-width: 1200px) {
+  .image-container {
+    min-width: 598px;
+  }
+}
+
+@media (min-width: 992px) {
+  .image-container-1 {
+    max-width: none;
+  }
+}
+
+.publication-comments-more-button {
+  background-color: #ffffff;
+  border: none;
+}
+
+.publication-comments-more-icon {
+  color: #212529;
+  font-size: 28px;
+}
+

@@ -15,7 +15,7 @@ require('dotenv').config();
 
 // Local
 const envVars = require('../config/env_vars');
-//import routes from '../routes/index';
+const mappingApp = require('../routes/index.routes');
 
 const app = (app) => {
   // Settings
@@ -32,14 +32,15 @@ const app = (app) => {
   app.use(express.json());
   app.use(morgan('dev'));
   app.use(
-    multer({ dest: path.join(__dirname, '../public/upload/temp') }).single(
-      'image',
-    ),
+    multer({
+      dest: path.join(__dirname, '../public/upload/temp'),
+    }).single('image'),
   );
   app.use(methodOverride('_method'));
   app.use(flash());
   app.use(
     session({
+      cookie: { maxAge: 60000 },
       secret: '3170',
       resave: true,
       saveUninitialized: true,
@@ -61,12 +62,12 @@ const app = (app) => {
   app.use(express.static(app.get('static files')));
 
   // Error handlers
-  if (app.get('environment') == 'development') {
-    app.use(errorHandler);
+  if (app.get('environment' === 'development')) {
+    app.use(errorHandler());
   }
 
   // Routes
-  // routes(app)
+  mappingApp(app);
 
   return app;
 };

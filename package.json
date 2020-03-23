@@ -1,6 +1,6 @@
 {
   "name": "imagenius-app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "App for share and comment photos.",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@sendgrid/mail": "^6.5.5",
     "bcrypt": "^4.0.1",
     "connect-flash": "^0.1.1",
     "errorhandler": "^1.5.1",
