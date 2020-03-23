@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const chalk = require('chalk');
 
 // Local
-const envVars = require('../config/env_vars');
+const envVars = require('../config/env_vars.config');
 
 // Initializations
 const { IMAGENIUS_APP_MONGODB_DATABASE, IMAGENIUS_APP_MONGODB_HOST } = envVars;

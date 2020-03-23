@@ -14,7 +14,7 @@ const passport = require('passport');
 require('dotenv').config();
 
 // Local
-const envVars = require('../config/env_vars');
+const envVars = require('../config/env_vars.config');
 const mappingApp = require('../routes/index.routes');
 
 const app = (app) => {
