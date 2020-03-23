@@ -2,14 +2,17 @@
 const Joi = require('@hapi/joi');
 
 const userValidationSchema = Joi.object().keys({
-  email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-    //.regex(/^([a-zA-Z0-9_.-]+)@([a-zA-Z0-9.]+).([a-zA-Z]{3,3})$/)
+  fullname: Joi.string()
+    .min(2)
+    .max(100)
+    .regex(/^(?=.{2,})[a-zA-Z]+[a-zA-Z\s]*$/)
     .required()
     .messages({
-      'string.email': 'Email must be a valid email.',
-      'string.empty': 'Email is required.',
-      'string.pattern.base': 'Email must not contain special characters.',
+      'string.min': 'Fullname must be at least {#limit} letters long.',
+      'string.max': 'Fullname must be at most {#limit} letters long.',
+      'string.empty': 'Fullname is required.',
+      'string.pattern.base':
+        'The full name must only contain letters and must not start with spaces.',
     }),
   username: Joi.string()
     .alphanum()
@@ -22,6 +25,15 @@ const userValidationSchema = Joi.object().keys({
       'string.max': 'Username must be at most {#limit} characters long.',
       'string.empty': 'Username is required.',
       'string.alphanum': 'Username must only contain alpha-numeric characters.',
+    }),
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+    .regex(/^([a-zA-Z0-9_.-]+)@([a-zA-Z0-9.]+).([a-zA-Z]{3,3})$/)
+    .required()
+    .messages({
+      'string.email': 'Email must be a valid email.',
+      'string.empty': 'Email is required.',
+      'string.pattern.base': 'Email must not contain special characters.',
     }),
   password: Joi.string()
     // Expresión de contraseña que requiere una letra minúscula, una letra mayúscula, un dígito, mas de 8 caracteres (editable) de longitud y sin espacios.

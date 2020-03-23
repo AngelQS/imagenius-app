@@ -1,3 +1,7 @@
+// Third
+const userValidationSchema = require('../config/hapi_joi.config');
+
+// Initializations
 const usersCtrl = {};
 
 usersCtrl.renderSignUpForm = (req, res) => {
@@ -6,9 +10,15 @@ usersCtrl.renderSignUpForm = (req, res) => {
 
 usersCtrl.signUp = (req, res, next) => {
   try {
-    const result = req.body;
-    console.log('req.body: ', req.body);
-    res.send(JSON.stringify(req.body));
+    const result = userValidationSchema.validate(req.body);
+    if (result.error) {
+      req.flash('error', result.error.details[0].message);
+      console.log('req.body:', req.body);
+      console.log('validation error:', result.error.details[0].message);
+      res.send('Error on validation!');
+    } else {
+      res.send('Successfull validation!');
+    }
   } catch (err) {
     next(err);
   }
