@@ -26,8 +26,12 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-    secretToken: {
+    token: {
       type: String,
+      default: null,
+    },
+    tokenExpires: {
+      type: Date,
       default: null,
     },
     active: {

@@ -42,6 +42,9 @@ usersCtrl.signUp = async (req, res, next) => {
     await delete result.value.confirmationPassword;
     const newUser = await new User(result.value);
     newUser.password = await newUser.encryptPassword(result.value.password);
+    console.log(newUser);
+
+    // Generate secret token
   } catch (err) {
     next(err);
   }
