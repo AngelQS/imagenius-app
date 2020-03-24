@@ -23,7 +23,7 @@ const userSchema = new Schema(
       required: true,
     },
     avatar: {
-      filename: String,
+      type: String,
       default: null,
     },
     secretToken: {
@@ -44,16 +44,16 @@ userSchema.methods.encryptPassword = async (password) => {
     const salt = await bcrypt.genSalt(12);
     return await bcrypt.hash(password, salt);
   } catch (err) {
-    throw
+    throw new Error('Hashing failed.', err);
   }
 };
 
-userSchema.methods.matchPassword = async function(password){
+userSchema.methods.matchPassword = async function(password) {
   try {
     return await bcrypt.compare(password, this.password);
   } catch (err) {
-    throw new Error('Passwords are not equals.', err)
+    throw new Error('Passwords are not equals.', err);
   }
-}
+};
 
 module.exports = model('User', userSchema);
