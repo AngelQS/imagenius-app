@@ -22,13 +22,14 @@ usersCtrl.signUp = async (req, res, next) => {
       res.send('Error on validation!');
     }
 
-    // Checking if email is already taken
+    // Checking if email and username is already taken
     const users = await User.find({
       $or: [{ email: result.value.email }, { username: result.value.username }],
     });
     users.forEach(async (user) => {
       if (user.email == result.value.email) {
         req.flash('error', 'Email is already in use.');
+        res.redirect('/users/signup');
       }
       if (user.username == result.value.username) {
         req.flash('error', 'Username is already in use.');

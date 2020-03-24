@@ -1,123 +1,193 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
-    <title>Imagenius</title>
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
-    />
-    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css" />
-    <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css" />
-    <link rel="stylesheet" href="/assets/fonts/ionicons.min.css" />
-    <link
-      rel="stylesheet"
-      href="/assets/fonts/fontawesome5-overrides.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"
-    />
-    <link rel="stylesheet" href="/assets/css/Studious-selectfile.css" />
-    <link rel="stylesheet" href="/assets/css/styles.css" />
-  </head>
+{% extends "./layouts/access.njk" %}
 
-  <body>
-    <nav
-      class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient"
-      style="padding-bottom: 0px;padding-top: 0px;padding-right: 16px;"
+{% block navigation %}
+<nav
+  class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient"
+  style="padding-bottom: 0px;padding-top: 0px;padding-right: 16px;"
+>
+  <div class="container">
+    <a class="navbar-brand logo" href="/">Imagenius</a
+    ><button
+      data-toggle="collapse"
+      class="navbar-toggler"
+      data-target="#navbarNav"
     >
-      <div class="container">
-        <a class="navbar-brand logo" href="/">Imagenius</a
-        ><button
-          data-toggle="collapse"
-          class="navbar-toggler"
-          data-target="#navbarNav"
+      <span class="sr-only">Toggle navigation</span
+      ><span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" href="/users/signin">Sign In</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endblock navigation %}
+
+{% block main %}
+<main class="page hire-me-page">
+  <section class="portfolio-block hire-me" style="padding-top: 30px;">
+    <div class="container">
+      <div class="heading" style="margin-bottom: 40px;">
+        <h2>SIGN UP</h2>
+      </div>
+      <form action="/users/signup" method="POST">
+        <div class="form-group">
+          <label for="inputFullname">Full name</label
+          ><input
+            id="inputFullname"
+            name="fullname"
+            class="form-control"
+            type="text"
+          />
+        </div>
+        <div class="form-group">
+          <label for="inputUsername">Username</label
+          ><input
+            id="inputUsername"
+            name="username"
+            class="form-control"
+            type="text"
+          />
+        </div>
+        <div class="form-group">
+          <label for="inputEmail">Email</label
+          ><input
+            id="inputEmail"
+            name="email"
+            class="form-control"
+            type="email"
+            id="email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="inputPassword">Password</label
+          ><input
+            id="inputPassword"
+            name="password"
+            class="form-control"
+            type="password"
+          />
+        </div>
+        <div class="form-group">
+          <label for="inputConfirmationPassword">Confirm password</label
+          ><input
+            id="inputConfirmationPassword"
+            name="confirmationPassword"
+            class="form-control"
+            type="password"
+          />
+        </div>
+        <div
+          class="d-flex d-sm-flex d-md-flex justify-content-center justify-content-sm-center justify-content-md-center"
         >
-          <span class="sr-only">Toggle navigation</span
-          ><span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item" role="presentation">
-              <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link" href="upload.html">Upload</a>
-            </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link" href="explore.html">Explore</a>
-            </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link" href="activity.html">Activity</a>
-            </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link" href="profile.html">Profile</a>
-            </li>
-          </ul>
+          <button class="btn btn-primary d-md-flex" type="submit">
+            Sign Up
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Button trigger modal -->
+  <button
+    id="onModal"
+    type="button"
+    class="btn btn-primary"
+    data-toggle="modal"
+    data-target="#exampleModal"
+  >
+    Launch demo modal
+  </button>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button
+            id="offModalX"
+            type="button"
+            class="close offModal"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button
+            id="offModal"
+            type="button"
+            class="btn btn-secondary offModal"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+          <button id="saveChanges" type="button" class="btn btn-primary">
+            Save changes
+          </button>
         </div>
       </div>
-    </nav>
-    <main class="page hire-me-page">
-      <section class="portfolio-block hire-me" style="padding-top: 30px;">
-        <div class="container">
-          <div class="heading" style="margin-bottom: 40px;">
-            <h2>SIGN UP</h2>
-          </div>
-          <form action="/users/signup" method="POST">
-            <div class="form-group">
-              <label for="inputFullname">Full name</label
-              ><input id="inputFullname" name="fullname" class="form-control" type="text" />
-            </div>
-            <div class="form-group">
-              <label for="inputUsername">Username</label
-              ><input id="inputUsername" name="username" class="form-control" type="text" />
-            </div>
-            <div class="form-group">
-              <label for="inputEmail">Email</label
-              ><input id="inputEmail" name="email" class="form-control" type="email" id="email" />
-            </div>
-            <div class="form-group">
-              <label for="inputPassword">Password</label
-              ><input id="inputPassword" name="password" class="form-control" type="password" />
-            </div>
-            <div class="form-group">
-              <label for="inputConfirmationPassword">Confirm password</label
-              ><input id="inputConfirmationPassword" name="confirmationPassword" class="form-control" type="password" />
-            </div>
-            <div
-              class="d-flex d-sm-flex d-md-flex justify-content-center justify-content-sm-center justify-content-md-center"
-            >
-              <button class="btn btn-primary d-md-flex" type="submit">
-                Sign Up
-              </button>
-            </div>
-          </form>
-        </div>
-      </section>
-    </main>
-    <footer class="page-footer gradient">
-      <div class="container">
-        <div class="links">
-          <a href="#">About me</a><a href="#">Contact me</a
-          ><a href="#">Projects</a>
-        </div>
-        <div class="social-icons">
-          <a href="#"><i class="icon ion-social-facebook"></i></a
-          ><a href="#"><i class="icon ion-social-instagram-outline"></i></a
-          ><a href="#"><i class="icon ion-social-twitter"></i></a>
-        </div>
-      </div>
-    </footer>
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
-    <script src="/assets/js/Studious-selectfile.js"></script>
-    <script src="/assets/js/theme.js"></script>
-  </body>
-</html>
+    </div>
+  </div>
+  <script>
+    document.getElementById('onModal').addEventListener('click', () => {
+      console.log('onModal');
+      history.pushState(
+        {},
+        document.title,
+        'http://localhost:5000/p/content_id',
+      );
+    });
+    document.getElementById('offModalX').addEventListener('click', () => {
+      history.replaceState(
+        {},
+        document.title,
+        'http://localhost:5000/users/signup',
+      );
+      //window.history.go(-1);
+      //history.forward();
+    });
+    document.getElementById('offModal').addEventListener('click', () => {
+      history.replaceState(
+        {},
+        document.title,
+        'http://localhost:5000/users/signup',
+      );
+      //window.history.go(-1);
+    });
+    document.getElementById('saveChanges').addEventListener('focus', () => {
+      console.log('focus');
+      history.replaceState(
+        {},
+        document.title,
+        'http://localhost:5000/p/content_id',
+      );
+      //window.history.go(-1);
+    });
+    document.getElementById('exampleModal').addEventListener('blur', () => {
+      console.log('blur');
+      history.replaceState(
+        {},
+        document.title,
+        'http://localhost:5000/users/signup',
+      );
+      //window.history.go(-1);
+    });
+  </script>
+</main>
+{% endblock main %}
