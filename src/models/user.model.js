@@ -22,6 +22,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    avatar: {
+      filename: String,
+      default: null,
+    },
     secretToken: {
       type: String,
       default: null,
@@ -52,4 +56,4 @@ userSchema.methods.matchPassword = async function(password){
   }
 }
 
-module.exports = model('user', userSchema);
+module.exports = model('User', userSchema);

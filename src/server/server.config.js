@@ -33,7 +33,7 @@ const app = (app) => {
   app.use(morgan('dev'));
   app.use(
     multer({
-      dest: path.join(__dirname, '../public/upload/temp'),
+      dest: path.join(__dirname, '../', 'public/upload/temp'),
     }).single('image'),
   );
   app.use(methodOverride('_method'));
