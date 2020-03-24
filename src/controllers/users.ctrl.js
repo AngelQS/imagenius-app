@@ -10,6 +10,7 @@ usersCtrl.renderSignUpForm = (req, res) => {
 };
 
 usersCtrl.signUp = async (req, res, next) => {
+  console.log('into signUp');
   try {
     // Data input verification
     const result = userValidationSchema.validate(req.body);
@@ -17,10 +18,10 @@ usersCtrl.signUp = async (req, res, next) => {
     // Data input validation
     if (result.error) {
       req.flash('error', result.error.details[0].message);
-      console.log('req.body:', req.body);
       console.log('validation error:', result.error.details[0].message);
-      res.send('Error on validation!');
+      res.redirect('/users/signup');
     }
+    //console.log('req.body:', req.body);
 
     // Checking if email and username is already taken
     const users = await User.find({
@@ -36,7 +37,11 @@ usersCtrl.signUp = async (req, res, next) => {
         req.redirect('/users/signup');
       }
     });
-    console.log('Successfull signup!');
+
+    // Save user to database
+    await delete result.value.confirmationPassword;
+    const newUser = await new User(result.value);
+    newUser.password = await newUser.encryptPassword(result.value.password);
   } catch (err) {
     next(err);
   }
