@@ -2,7 +2,7 @@
 const sgMail = require('@sendgrid/mail');
 
 // Local
-const envVars = require('./env_vars');
+const envVars = require('./env_vars.config');
 
 // Initializations
 sgMail.setApiKey(envVars.TWILIO_SENDGRID_AUTH_KEY);
@@ -15,4 +15,4 @@ const msg = {
   html: '<strong>and easy to do anywhere, even with Node.js</strong>',
 };
 
-sgMail.send(message);
+//sgMail.send(message);

@@ -30,10 +30,6 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-    tokenExpires: {
-      type: Date,
-      default: null,
-    },
     active: {
       type: Boolean,
       default: false,

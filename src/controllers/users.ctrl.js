@@ -1,5 +1,8 @@
 // Local
-const userValidationSchema = require('../config/hapi_joi.config');
+const {
+  hapi_joi: userValidationSchema,
+  jwt: jwtUtils,
+} = require('../config/index.config');
 const { User } = require('../models/index.model');
 
 // Initializations
@@ -10,7 +13,6 @@ usersCtrl.renderSignUpForm = (req, res) => {
 };
 
 usersCtrl.signUp = async (req, res, next) => {
-  console.log('into signUp');
   try {
     // Data input verification
     const result = userValidationSchema.validate(req.body);
@@ -41,13 +43,74 @@ usersCtrl.signUp = async (req, res, next) => {
     // Save user to database
     await delete result.value.confirmationPassword;
     const newUser = await new User(result.value);
+
+    // Hash the password
     newUser.password = await newUser.encryptPassword(result.value.password);
-    console.log(newUser);
 
     // Generate secret token
+    const data = {
+      // data to feed token
+      id: newUser._id,
+      email: newUser.email,
+    };
+    const userToken = await jwtUtils.generate(data);
+    newUser.token = userToken;
+
+    console.log(newUser);
+    await newUser.save();
   } catch (err) {
     next(err);
   }
 };
+
+/* const express = require('express');
+const jwt = require('jsonwebtoken');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.json({
+    text: 'api works!',
+  });
+});
+
+app.post('/api/login', (req, res) => {
+  const user = { id: 2 };
+  // 1: recibe obj del usuario, 2: clave o llave secreta que le permite a jwt tener una manera de cifrar y descifrar el codigo
+  // final: token generado
+  const token = jwt.sign({ user }, 'my_env_var_secret_token');
+  res.json({
+    token,
+  });
+});
+
+app.get('/api/protected', ensureToken, (req, res) => {
+  jwt.verify(req.token, 'my_env_var_secret_token', (err, data) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      res.json({
+        text: 'protected',
+        data,
+      });
+    }
+  });
+});
+
+function ensureToken(req, res, next) {
+  const bearerHeader = req.headers['authorization'];
+  console.log('req.headers:', req.headers);
+  if (typeof bearerHeader !== 'undefined') {
+    const bearer = bearerHeader.split(' ');
+    const bearerToken = bearer[1];
+    req.token = bearerToken;
+    next();
+  } else {
+    res.sendStatus(403);
+  }
+}
+
+app.listen(3000, () => {
+  console.log('Server on port 3000');
+}); */
 
 module.exports = usersCtrl;
