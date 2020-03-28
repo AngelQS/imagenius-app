@@ -11,5 +11,5 @@ const app = serverConfig(express());
 const successMark = chalk.bold.yellow;
 
 app.listen(app.get('port'), () => {
-  console.log(successMark(`>>> Server on port ${app.get('port')}`));
+  console.log(successMark(`>>> Server listen on port ${app.get('port')}`));
 });

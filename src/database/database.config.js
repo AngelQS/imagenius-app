@@ -19,7 +19,9 @@ mongoose
   })
   .then((db) =>
     console.log(
-      successMark(`>>> ${IMAGENIUS_APP_MONGODB_DATABASE} is connected`),
+      successMark(
+        `>>> Database ${IMAGENIUS_APP_MONGODB_DATABASE} is connected`,
+      ),
     ),
   )
   .catch((err) => console.log(errorMark(err)));

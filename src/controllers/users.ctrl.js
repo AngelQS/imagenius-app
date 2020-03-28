@@ -2,8 +2,10 @@
 const {
   hapi_joi: userValidationSchema,
   jwt: jwtUtils,
+  sendgrid: makeMessage,
 } = require('../config/index.config');
 const { User } = require('../models/index.model');
+const insertTokenToHTML = require('../components/email.component');
 
 // Initializations
 const usersCtrl = {};
@@ -14,6 +16,12 @@ usersCtrl.renderSignUpForm = (req, res) => {
 
 usersCtrl.signUp = async (req, res, next) => {
   try {
+    //console.log('req.body:', req.body);
+    //console.log('req.cookies:', req.cookies);
+    //console.log('req.signedCookies:', req.signedCookies);
+    //console.log('req.headers:', req.headers);
+    //console.log('req.headers.authorization:', req.headers.authorization);
+
     // Data input verification
     const result = userValidationSchema.validate(req.body);
 
@@ -58,59 +66,21 @@ usersCtrl.signUp = async (req, res, next) => {
 
     console.log(newUser);
     await newUser.save();
+
+    // Inserting token to email template to send a sms to user
+    const html = insertTokenToHTML(newUser.token);
+
+    // Making message to send a sms to user
+    const messageStatus = makeMessage(newUser.email, html);
+    if (messageStatus) {
+      console.log('MENSAJE ENVIADO');
+    } else {
+      req.flash('Something went wrong! Please try sign up later.');
+      req.redirect('/users/signup');
+    }
   } catch (err) {
     next(err);
   }
 };
-
-/* const express = require('express');
-const jwt = require('jsonwebtoken');
-const app = express();
-
-app.get('/', (req, res) => {
-  res.json({
-    text: 'api works!',
-  });
-});
-
-app.post('/api/login', (req, res) => {
-  const user = { id: 2 };
-  // 1: recibe obj del usuario, 2: clave o llave secreta que le permite a jwt tener una manera de cifrar y descifrar el codigo
-  // final: token generado
-  const token = jwt.sign({ user }, 'my_env_var_secret_token');
-  res.json({
-    token,
-  });
-});
-
-app.get('/api/protected', ensureToken, (req, res) => {
-  jwt.verify(req.token, 'my_env_var_secret_token', (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      res.json({
-        text: 'protected',
-        data,
-      });
-    }
-  });
-});
-
-function ensureToken(req, res, next) {
-  const bearerHeader = req.headers['authorization'];
-  console.log('req.headers:', req.headers);
-  if (typeof bearerHeader !== 'undefined') {
-    const bearer = bearerHeader.split(' ');
-    const bearerToken = bearer[1];
-    req.token = bearerToken;
-    next();
-  } else {
-    res.sendStatus(403);
-  }
-}
-
-app.listen(3000, () => {
-  console.log('Server on port 3000');
-}); */
 
 module.exports = usersCtrl;
