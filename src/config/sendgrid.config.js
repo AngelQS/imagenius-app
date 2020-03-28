@@ -7,16 +7,16 @@ const envVars = require('./env_vars.config');
 // Initializations
 sgMail.setApiKey(envVars.TWILIO_SENDGRID_AUTH_KEY);
 
-const makeMessage = (to, html) => {
+const makeMessage = async (to, html) => {
   try {
     const msg = {
-      to: to,
+      to,
       from: 'aedwin.acuario31@gmail.com',
       subject: 'Email verification',
       text: 'and easy to do anywhere, even with Node.js',
-      html: html,
+      html,
     };
-    sgMail.send(msg);
+    await sgMail.send(msg);
     console.log('Message has been send');
     return true;
   } catch (err) {

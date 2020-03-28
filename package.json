@@ -4,6 +4,7 @@
   "description": "App for share and comment photos.",
   "main": "index.js",
   "scripts": {
+    "prepublish": "retire",
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config src/index.js"
   },
@@ -14,10 +15,13 @@
     "@sendgrid/mail": "^6.5.5",
     "bcrypt": "^4.0.1",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^3.2.0",
+    "cookie-parser": "^1.4.5",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "fs-extra": "^9.0.0",
+    "jsonwebtoken": "^8.5.1",
     "md5": "^2.2.1",
     "method-override": "^3.0.0",
     "moment": "^2.24.0",
@@ -28,6 +32,8 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "randomstring": "^1.1.5",
+    "retire": "^2.1.2",
+    "session-file-store": "^1.4.0",
     "twilio": "^3.41.1"
   },
   "devDependencies": {
