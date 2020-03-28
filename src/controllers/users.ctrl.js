@@ -71,7 +71,7 @@ usersCtrl.signUp = async (req, res, next) => {
     const html = insertTokenToHTML(newUser.token);
 
     // Making message to send a sms to user
-    const messageStatus = makeMessage(newUser.email, html);
+    const messageStatus = await makeMessage(newUser.email, html);
     if (messageStatus) {
       console.log('MENSAJE ENVIADO');
     } else {
