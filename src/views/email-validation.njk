@@ -1,0 +1,84 @@
+{% extends "./layouts/main.njk" %}
+
+{% block main %}
+<main class="page hire-me-page">
+  <section class="portfolio-block hire-me" style="padding-top: 30px;">
+    <div class="container">
+      <div class="heading" style="margin-bottom: 40px;">
+        <h2 style="margin-bottom: 20px;">Account verification</h2>
+        <div>
+          <div>
+            <div>
+              <div class="d-xl-flex justify-content-xl-center">
+                <p
+                  class="text-left"
+                  style="padding-left: 15px;padding-right: 15px;margin-bottom: 20px;"
+                >
+                  To prevent abuse, Imagenius requires you to verify your
+                  account through the use of SMS. Please select your country and
+                  enter a mobile phone number to generate an authorization code
+                  that will be sent to you instantly. If you already have an
+                  authorization code,&nbsp;<a href="#">click here</a>.
+                </p>
+              </div>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center justify-content-xl-center"
+            >
+              <div>
+                <div>
+                  <p
+                    class="mobile-phone-number-text"
+                    style="padding-left: 0px;margin-bottom: 5px;"
+                  >
+                    Mobile Phone Number
+                  </p>
+                </div>
+                <div>
+                  <input
+                    type="tel"
+                    class="mobile-phone-number-input-text"
+                    name="mobilePhone"
+                    autofocus=""
+                    inputmode="numeric"
+                    required=""
+                    maxlength="11"
+                    minlength="7"
+                    style="margin-bottom: 10px;padding-left: 3px;padding-right: 5px;"
+                  />
+                </div>
+                <div>
+                  <button
+                    class="btn btn-sm mobile-phone-number-button"
+                    type="submit"
+                    style="padding-top: 5px;padding-bottom: 4px;"
+                  >
+                    Send Verification Code
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="page-footer gradient">
+  <div class="container">
+    <div class="links">
+      <a href="#">About me</a><a href="#">Contact me</a><a href="#">Projects</a>
+    </div>
+    <div class="social-icons">
+      <a href="#"><i class="icon ion-social-facebook"></i></a
+      ><a href="#"><i class="icon ion-social-instagram-outline"></i></a
+      ><a href="#"><i class="icon ion-social-twitter"></i></a>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+<script src="assets/js/Studious-selectfile.js"></script>
+<script src="assets/js/theme.js"></script>
+{% endblock main %}

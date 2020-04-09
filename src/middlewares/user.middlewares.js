@@ -1,4 +1,5 @@
-// Authorization middleware
+// Local
+const { hapi_joi: userValidationSchema } = require('../config/index.config');
 
 const usersMiddlewares = {};
 
@@ -18,6 +19,18 @@ usersMiddlewares.isNotAuthenticated = (req, res, next) => {
   } else {
     return next();
   }
+};
+
+usersMiddlewares.RegistryFormDataValidation = async (req, res, next) => {
+  // Data input validation
+  const validationResult = userValidationSchema
+    .validateAsync(req.body)
+    .then((data) => {
+      req.data = validationResult;
+      console.log('validationResult:', validationResult);
+      next();
+    })
+    .catch((err) => next(err));
 };
 
 module.exports = usersMiddlewares;

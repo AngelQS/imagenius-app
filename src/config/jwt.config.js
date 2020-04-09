@@ -1,9 +1,9 @@
 // Third
 const jwt = require('jsonwebtoken');
-const fs = require('fs-extra');
+const fse = require('fs-extra');
 
 // Sign with ES512
-// const privateKey = fs.readFileSync('public.pem')
+// const privateKey = fse.readFileSync('public.pem')
 const privateKey = 'secretKey';
 
 const jwtUtils = {};

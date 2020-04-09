@@ -89,7 +89,7 @@ const app = (app) => {
   app.use(express.static(app.get('static files')));
 
   // Error handlers
-  if (app.get('environment' === 'development')) {
+  if (app.get('environment') === 'development') {
     app.use(errorHandler());
   }
 

@@ -1,6 +1,5 @@
 // Local
 const {
-  hapi_joi: userValidationSchema,
   jwt: jwtUtils,
   sendgrid: makeMessage,
 } = require('../config/index.config');
@@ -23,19 +22,23 @@ usersCtrl.signUp = async (req, res, next) => {
     //console.log('req.headers.authorization:', req.headers.authorization);
 
     // Data input verification
-    const result = userValidationSchema.validate(req.body);
+    /* const result = userValidationSchema.validate(req.body);
 
-    // Data input validation
-    if (result.error) {
+    // Data input validation */
+    /* if (result.error) {
       req.flash('error', result.error.details[0].message);
       console.log('validation error:', result.error.details[0].message);
       res.redirect('/users/signup');
-    }
+    } */
+    console.log('req.data:', req.data);
     //console.log('req.body:', req.body);
+
+    // Getting data from previous middleware
+    data = req.data;
 
     // Checking if email and username is already taken
     const users = await User.find({
-      $or: [{ email: result.value.email }, { username: result.value.username }],
+      $or: [{ email: data.value.email }, { username: data.value.username }],
     });
     users.forEach(async (user) => {
       if (user.email == result.value.email) {
@@ -44,7 +47,7 @@ usersCtrl.signUp = async (req, res, next) => {
       }
       if (user.username == result.value.username) {
         req.flash('error', 'Username is already in use.');
-        req.redirect('/users/signup');
+        res.redirect('/users/signup');
       }
     });
 
@@ -56,15 +59,15 @@ usersCtrl.signUp = async (req, res, next) => {
     newUser.password = await newUser.encryptPassword(result.value.password);
 
     // Generate secret token
-    const data = {
+    const datax = {
       // data to feed token
       id: newUser._id,
       email: newUser.email,
     };
-    const userToken = await jwtUtils.generate(data);
+    const userToken = await jwtUtils.generate(datax);
     newUser.token = userToken;
 
-    console.log(newUser);
+    //console.log(newUser);
     await newUser.save();
 
     // Inserting token to email template to send a sms to user
@@ -76,11 +79,17 @@ usersCtrl.signUp = async (req, res, next) => {
       console.log('MENSAJE ENVIADO');
     } else {
       req.flash('Something went wrong! Please try sign up later.');
-      req.redirect('/users/signup');
+      res.redirect('/users/signup');
     }
+    res.set('x-access-token', `${userToken}`);
+    res.redirect('signin');
   } catch (err) {
     next(err);
   }
+};
+
+usersCtrl.renderSignInForm = (req, res) => {
+  res.render('signin');
 };
 
 module.exports = usersCtrl;

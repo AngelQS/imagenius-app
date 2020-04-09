@@ -38,6 +38,8 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
+// Schema statics
+
 // Schema methods
 userSchema.methods.encryptPassword = async (password) => {
   try {
@@ -48,7 +50,7 @@ userSchema.methods.encryptPassword = async (password) => {
   }
 };
 
-userSchema.methods.matchPassword = async function(password) {
+userSchema.methods.matchPassword = async function (password) {
   try {
     return await bcrypt.compare(password, this.password);
   } catch (err) {
