@@ -2,23 +2,29 @@
 const { Router } = require('express');
 
 // Middlewares
-const userMiddlewares = require('../middlewares/user.middlewares');
+const {
+  registryDataValidation: dataValidation,
+} = require('../middlewares/user.middlewares');
 
 // Initializations
 const usersRouter = Router();
-const usersCtrl = require('../controllers/users.ctrl');
+const {
+  renderSignUpForm,
+  signUp,
+  renderSignInForm,
+} = require('../controllers/users.ctrl');
 
 usersRouter
   // Sign Up route
   .route('/users/signup')
 
-  .get(usersCtrl.renderSignUpForm)
-  .post(userMiddlewares.RegistryFormDataValidation, usersCtrl.signUp);
+  .get(renderSignUpForm)
+  .post(dataValidation, signUp);
 
 usersRouter
   // Sign In route
   .route('/users/signin')
 
-  .get(usersCtrl.renderSignInForm);
+  .get(renderSignInForm);
 
 module.exports = usersRouter;

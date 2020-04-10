@@ -4,7 +4,6 @@ const path = require('path');
 // Third
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
-const errorHandler = require('errorhandler');
 const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
@@ -87,11 +86,6 @@ const app = (app) => {
   // Static files
   app.set('static files', path.join(__dirname, '../', 'public'));
   app.use(express.static(app.get('static files')));
-
-  // Error handlers
-  if (app.get('environment') === 'development') {
-    app.use(errorHandler());
-  }
 
   // Routes
   mappingApp(app);

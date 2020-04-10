@@ -14,78 +14,76 @@ usersCtrl.renderSignUpForm = (req, res) => {
 };
 
 usersCtrl.signUp = async (req, res, next) => {
-  try {
-    //console.log('req.body:', req.body);
-    //console.log('req.cookies:', req.cookies);
-    //console.log('req.signedCookies:', req.signedCookies);
-    //console.log('req.headers:', req.headers);
-    //console.log('req.headers.authorization:', req.headers.authorization);
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.data is null
+    if (!req.data) {
+      req.flash('error', 'A problem has ocurred. Please try again later');
+      reject(Error('Unable to get user input data from req.data'));
+    }
 
-    // Data input verification
-    /* const result = userValidationSchema.validate(req.body);
+    // Getting user data from req.data
+    const data = req.data;
 
-    // Data input validation */
-    /* if (result.error) {
-      req.flash('error', result.error.details[0].message);
-      console.log('validation error:', result.error.details[0].message);
-      res.redirect('/users/signup');
-    } */
-    console.log('req.data:', req.data);
-    //console.log('req.body:', req.body);
+    // Handle error if data containts errors
+    if (data.error) {
+      const err = data.error.details[0].message;
+      req.flash('error', err);
+      reject(Error('Invalid user input data for sign up'));
+    }
 
-    // Getting data from previous middleware
-    data = req.data;
+    const username = data.value.username;
+    const email = data.value.email;
 
-    // Checking if email and username is already taken
-    const users = await User.find({
-      $or: [{ email: data.value.email }, { username: data.value.username }],
-    });
-    users.forEach(async (user) => {
-      if (user.email == result.value.email) {
-        req.flash('error', 'Email is already in use.');
-        res.redirect('/users/signup');
-      }
-      if (user.username == result.value.username) {
-        req.flash('error', 'Username is already in use.');
-        res.redirect('/users/signup');
-      }
-    });
+    const user = await User.exists(
+      { $or: [{ username }, { email }] },
+      (err) => {
+        if (err) {
+          reject(Error('Unable to find users on Users Model'));
+        }
+      },
+    );
+
+    // Handle error if user credentials already in use
+    if (user) {
+      req.flash('error', 'Username or Email already in use.');
+      reject(Error('MongoDB Key Duplication. User already exists'));
+    }
 
     // Save user to database
-    await delete result.value.confirmationPassword;
-    const newUser = await new User(result.value);
+    await delete data.value.confirmationPassword;
+    const newUser = await new User(data.value);
 
-    // Hash the password
-    newUser.password = await newUser.encryptPassword(result.value.password);
-
-    // Generate secret token
-    const datax = {
-      // data to feed token
+    // Generating user token
+    const userData = {
       id: newUser._id,
+      username: newUser.username,
       email: newUser.email,
     };
-    const userToken = await jwtUtils.generate(datax);
-    newUser.token = userToken;
 
-    //console.log(newUser);
-    await newUser.save();
-
-    // Inserting token to email template to send a sms to user
-    const html = insertTokenToHTML(newUser.token);
-
-    // Making message to send a sms to user
-    const messageStatus = await makeMessage(newUser.email, html);
-    if (messageStatus) {
-      console.log('MENSAJE ENVIADO');
-    } else {
-      req.flash('Something went wrong! Please try sign up later.');
+    const userToken = await jwtUtils
+      .generate(userData, (err, token) => {
+        if (err) {
+          reject(Error('Unable to generate user token'));
+        }
+        resolve(token);
+      })
+      .then((token) => {
+        console.log('token:', token);
+        res.setHeader('Imagenius-authorization', token);
+      })
+      .catch((err) => next(err));
+    resolve();
+  })
+    .then(() => {
+      // If none errors, redirect to signin view
+      res.redirect('/users/signin');
+    })
+    .catch((err) => {
+      // If errors exists, redirect to signup view
       res.redirect('/users/signup');
-    }
-    res.set('x-access-token', `${userToken}`);
-    res.redirect('signin');
-  } catch (err) {
-    next(err);
-  }
+      // And log up the error
+      next(err);
+    });
 };
 
 usersCtrl.renderSignInForm = (req, res) => {

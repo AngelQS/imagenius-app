@@ -38,17 +38,21 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
-// Schema statics
-
-// Schema methods
-userSchema.methods.encryptPassword = async (password) => {
-  try {
-    const salt = await bcrypt.genSalt(12);
-    return await bcrypt.hash(password, salt);
-  } catch (err) {
-    throw new Error(`Hashing failed: ${err}`);
-  }
-};
+// Schema pre hooks
+userSchema.pre('save', async function (next) {
+  new Promise(async function (resolve, reject) {
+    const user = this;
+    if (user.isModified('password')) {
+      salt = await bcrypt.genSalt(20).then(async (salt) => {
+        user.password = await bcrypt.hash(user.password, salt);
+        resolve();
+      });
+    }
+  }).catch((err) => {
+    console.log('CATCH ERROR:', err);
+    next(err);
+  });
+});
 
 userSchema.methods.matchPassword = async function (password) {
   try {

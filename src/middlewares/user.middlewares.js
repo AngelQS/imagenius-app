@@ -21,16 +21,26 @@ usersMiddlewares.isNotAuthenticated = (req, res, next) => {
   }
 };
 
-usersMiddlewares.RegistryFormDataValidation = async (req, res, next) => {
-  // Data input validation
-  const validationResult = userValidationSchema
-    .validateAsync(req.body)
-    .then((data) => {
-      req.data = validationResult;
-      console.log('validationResult:', validationResult);
+usersMiddlewares.registryDataValidation = async (req, res, next) => {
+  new Promise((resolve, reject) => {
+    // Input data validation
+    let result = userValidationSchema.validate(req.body);
+
+    if (!result) {
+      reject(Error('Unable to validate user input data'));
+    }
+
+    // Resolving promise if not null
+    resolve(result);
+  })
+    .then((result) => {
+      // Saving the validation result
+      req.data = result;
       next();
     })
-    .catch((err) => next(err));
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports = usersMiddlewares;
