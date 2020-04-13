@@ -2,8 +2,10 @@
 const path = require('path');
 
 // Third
+const chalk = require('chalk');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
+//const errorHandler = require('errorhandler');
 const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
@@ -25,6 +27,7 @@ const mappingApp = require('../routes/index.routes');
 
 // Initializations
 const PORT = APP_PORT || 3000;
+const errorMark = chalk.bold.red;
 
 const app = (app) => {
   // Settings
@@ -89,6 +92,28 @@ const app = (app) => {
 
   // Routes
   mappingApp(app);
+
+  // Error handler
+
+  const errorHandler = (err, req, res, next) => {
+    const title = `Error in ${req.method} ${req.url}`;
+    console.log(`${title}\n${err}`);
+    //console.log('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
+    //res.render('error500');
+  };
+
+  app.use(errorHandler);
+
+  /* if (APP_ENVIRONMENT === 'development') {
+    console.log('ERROR HANDLER MIDDLEWARE');
+    // only use in development
+    app.use(errorHandler({ log: errorNotification }));
+  }
+
+  function errorNotification(err, str, req) {
+    const title = 'Error in ' + req.method + ' ' + req.url;
+    console.log(errorMark(`${title}\n${str}`));
+  } */
 
   return app;
 };

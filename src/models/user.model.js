@@ -40,18 +40,54 @@ const userSchema = new Schema(
 
 // Schema pre hooks
 userSchema.pre('save', async function (next) {
+  const user = this;
   new Promise(async function (resolve, reject) {
-    const user = this;
     if (user.isModified('password')) {
-      salt = await bcrypt.genSalt(20).then(async (salt) => {
-        user.password = await bcrypt.hash(user.password, salt);
-        resolve();
-      });
+      const salt = bcrypt.genSaltSync(12);
+      if (!salt) {
+        reject(Error('Unable to generate Salt'));
+      }
+
+      // Hashing the password
+      const hashedPassword = bcrypt.hashSync(user.password, salt);
+      if (!hashedPassword) {
+        reject(Error('Unable to hash the user password'));
+      }
+
+      // Saving the hashing password
+      user.password = hashedPassword;
+
+      /* await bcrypt.genSalt(20, async function (err, salt) {
+        console.log('SALT GENERATED');
+        if (err) {
+          reject(Error('Unable to generate Salt'));
+        }
+        console.log('user.password 1:', user.password);
+        await bcrypt.hash(user.password, salt, async function (
+          err,
+          hashedPassword,
+        ) {
+          console.log('hashedPassword:', hashedPassword);
+          user.password = hashedPassword;
+          console.log('user.password 2:', user.password);
+          if (err) {
+            reject(Error('Unable to hash the user password'));
+          }
+          console.log('RESOLVE');
+          resolve();
+        });
+        console.log('SALT END');
+      }); */
     }
-  }).catch((err) => {
-    console.log('CATCH ERROR:', err);
-    next(err);
-  });
+  })
+    .then(() => {
+      console.log('NEXT()');
+      next();
+    })
+    .catch((err) => {
+      console.log('CATCH ERROR:', err);
+      next(err);
+    });
 });
 
 userSchema.methods.matchPassword = async function (password) {

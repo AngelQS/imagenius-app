@@ -24,14 +24,13 @@ usersMiddlewares.isNotAuthenticated = (req, res, next) => {
 usersMiddlewares.registryDataValidation = async (req, res, next) => {
   new Promise((resolve, reject) => {
     // Input data validation
-    let result = userValidationSchema.validate(req.body);
-
+    const result = userValidationSchema.validate(req.body);
     if (!result) {
-      reject(Error('Unable to validate user input data'));
+      return reject(Error('Unable to validate user input data'));
     }
 
     // Resolving promise if not null
-    resolve(result);
+    return resolve(result);
   })
     .then((result) => {
       // Saving the validation result

@@ -1,0 +1,28 @@
+{% if success != '' %}
+<div
+  class="alert alert-success alert-dismissible fade show"
+  id="alert"
+  role="alert"
+  style="margin-top: 60px;"
+>
+  <i class="fa fa-check-circle"></i>
+  <strong>Successfully!</strong>
+  {{ success }}.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %} {% if error!= '' %}
+<div
+  class="alert alert-danger alert-dismissible fade show"
+  id="alert"
+  role="alert"
+  style="margin-top: 60px;"
+>
+  <i class="fa fa-exclamation-circle"></i>
+  {{ error }}.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
