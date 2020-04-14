@@ -2,6 +2,9 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
+// Local
+const capitalize = require('../helpers/capitalize');
+
 const userSchema = new Schema(
   {
     fullname: {
@@ -42,13 +45,19 @@ const userSchema = new Schema(
 userSchema.pre('save', async function (next) {
   const user = this;
   new Promise(async function (resolve, reject) {
+    // Cleaning user input data
+    user.fullname = capitalize(user.fullname);
+    user.username = user.username.toLowerCase();
+    user.email = user.email.toLowerCase();
+
+    // Hashing the password
     if (user.isModified('password')) {
       const salt = bcrypt.genSaltSync(12);
       if (!salt) {
         reject(Error('Unable to generate Salt'));
       }
 
-      // Hashing the password
+      // Getting hashed password
       const hashedPassword = bcrypt.hashSync(user.password, salt);
       if (!hashedPassword) {
         reject(Error('Unable to hash the user password'));
@@ -56,28 +65,6 @@ userSchema.pre('save', async function (next) {
 
       // Saving the hashing password
       user.password = hashedPassword;
-
-      /* await bcrypt.genSalt(20, async function (err, salt) {
-        console.log('SALT GENERATED');
-        if (err) {
-          reject(Error('Unable to generate Salt'));
-        }
-        console.log('user.password 1:', user.password);
-        await bcrypt.hash(user.password, salt, async function (
-          err,
-          hashedPassword,
-        ) {
-          console.log('hashedPassword:', hashedPassword);
-          user.password = hashedPassword;
-          console.log('user.password 2:', user.password);
-          if (err) {
-            reject(Error('Unable to hash the user password'));
-          }
-          console.log('RESOLVE');
-          resolve();
-        });
-        console.log('SALT END');
-      }); */
     }
   })
     .then(() => {

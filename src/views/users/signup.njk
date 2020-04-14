@@ -1,4 +1,4 @@
-{% extends "./layouts/main.njk" %}
+{% extends "../layouts/main.njk" %}
 
 {% block navigation %}
 <nav
@@ -150,14 +150,14 @@
       history.pushState(
         {},
         document.title,
-        'http://localhost:5000/p/content_id',
+        'http://localhost:4000/p/content_id',
       );
     });
     document.getElementById('offModalX').addEventListener('click', () => {
       history.replaceState(
         {},
         document.title,
-        'http://localhost:5000/users/signup',
+        'http://localhost:4000/users/signup',
       );
       //window.history.go(-1);
       //history.forward();
@@ -166,7 +166,7 @@
       history.replaceState(
         {},
         document.title,
-        'http://localhost:5000/users/signup',
+        'http://localhost:4000/users/signup',
       );
       //window.history.go(-1);
     });
@@ -175,7 +175,7 @@
       history.replaceState(
         {},
         document.title,
-        'http://localhost:5000/p/content_id',
+        'http://localhost:4000/p/content_id',
       );
       //window.history.go(-1);
     });
@@ -184,7 +184,7 @@
       history.replaceState(
         {},
         document.title,
-        'http://localhost:5000/users/signup',
+        'http://localhost:4000/users/signup',
       );
       //window.history.go(-1);
     });

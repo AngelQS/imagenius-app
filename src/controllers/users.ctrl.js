@@ -10,7 +10,7 @@ const insertTokenToHTML = require('../components/email.component');
 const usersCtrl = {};
 
 usersCtrl.renderSignUpForm = (req, res) => {
-  return res.render('signup');
+  return res.render('users/signup');
 };
 
 usersCtrl.signUp = async (req, res, next) => {
@@ -18,16 +18,17 @@ usersCtrl.signUp = async (req, res, next) => {
     // Handle error if req.data is null
     if (!req.data) {
       req.flash('error', 'A problem has ocurred. Please try again later');
-      return res.redirect('/users/signup');
+      return res.redirect('signup');
       //return reject(Error('Unable to get user input data from req.data'));
     }
     // Getting user data from req.data
     const data = req.data;
     // Handle error if data containts errors
     if (data.error) {
+      console.log('DATA.ERROR');
       const dataError = data.error.details[0].message;
       req.flash('error', dataError);
-      return res.redirect('/users/signup');
+      return res.redirect('signup');
       //return reject(new Error('Invalid user input data for sign up'));
     }
 
@@ -41,7 +42,7 @@ usersCtrl.signUp = async (req, res, next) => {
       });
       if (user) {
         req.flash('error', 'Username or Email already in use');
-        return res.redirect('/users/signup');
+        return res.redirect('signup');
       }
     } catch (err) {
       req.flash('Something went wrong. Please try again later');
@@ -59,31 +60,19 @@ usersCtrl.signUp = async (req, res, next) => {
     const userToken = await jwtUtils.generate(userData);
     if (!userToken) {
       req.flash('error', 'Something went wrong. Please try again later');
-      return res.redirect('/users/signup');
+      return res.redirect('signup');
       //return reject(Error('Unable to generate user token'));
     }
+
     // Saving the user
-    //await newUser.save();
-    //console.log('NUMBER 15');
-    //return res.redirect('/users/signin');
-    //console.log('NUMBER 16');
-    console.log('ANTES DE SAVE');
     await newUser.save((err) => {
       if (err) {
-        console.log('DENTRO DE SAVE');
         req.flash('error', 'Something went wrong. Please try again later');
-        return res.redirect('/users/signup');
+        return res.redirect('signup');
         //return reject(Error('Unable to save user to database'));
       }
-      console.log('RESOLVING');
       return resolve();
     });
-    console.log('DESPUES DE SAVE');
-
-    //console.log('NUMBER 16');
-    //console.log('REJECT');
-    //req.flash('error', 'Something went wrong. Please try again later.');
-    //return reject(Error('Something went wrong again'));
   })
     .then(() => {
       // If none errors, redirect to signin view
@@ -91,17 +80,19 @@ usersCtrl.signUp = async (req, res, next) => {
         'success',
         'Please, activate your account through verification code we send you',
       );
-      res.redirect('/users/signin');
+      res.redirect('signin');
       return next();
     })
     .catch((err) => {
+      console.log('ERROR');
       // If errors exists, redirect to error view And log up the error
-      return next(err);
+      req.error = err;
+      return next(req.error);
     });
 };
 
 usersCtrl.renderSignInForm = (req, res) => {
-  res.render('signin');
+  res.render('users/signin');
 };
 
 module.exports = usersCtrl;

@@ -1,9 +1,9 @@
 // Local
 const { hapi_joi: userValidationSchema } = require('../config/index.config');
 
-const usersMiddlewares = {};
+const userMiddlewares = {};
 
-usersMiddlewares.isAuthenticated = (req, res, next) => {
+userMiddlewares.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   } else {
@@ -12,7 +12,7 @@ usersMiddlewares.isAuthenticated = (req, res, next) => {
   }
 };
 
-usersMiddlewares.isNotAuthenticated = (req, res, next) => {
+userMiddlewares.isNotAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     req.flash('error', 'You are already logged in.');
     res.redirect('/');
@@ -21,7 +21,7 @@ usersMiddlewares.isNotAuthenticated = (req, res, next) => {
   }
 };
 
-usersMiddlewares.registryDataValidation = async (req, res, next) => {
+userMiddlewares.registryDataValidation = async (req, res, next) => {
   new Promise((resolve, reject) => {
     // Input data validation
     const result = userValidationSchema.validate(req.body);
@@ -42,4 +42,4 @@ usersMiddlewares.registryDataValidation = async (req, res, next) => {
     });
 };
 
-module.exports = usersMiddlewares;
+module.exports = userMiddlewares;
