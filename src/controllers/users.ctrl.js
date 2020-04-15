@@ -15,23 +15,7 @@ usersCtrl.renderSignUpForm = (req, res) => {
 
 usersCtrl.signUp = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
-    // Handle error if req.data is null
-    if (!req.data) {
-      req.flash('error', 'A problem has ocurred. Please try again later');
-      return res.redirect('signup');
-      //return reject(Error('Unable to get user input data from req.data'));
-    }
-    // Getting user data from req.data
     const data = req.data;
-    // Handle error if data containts errors
-    if (data.error) {
-      console.log('DATA.ERROR');
-      const dataError = data.error.details[0].message;
-      req.flash('error', dataError);
-      return res.redirect('signup');
-      //return reject(new Error('Invalid user input data for sign up'));
-    }
-
     // Checking if user already exists
     const username = data.value.username;
     const email = data.value.email;
@@ -84,7 +68,6 @@ usersCtrl.signUp = async (req, res, next) => {
       return next();
     })
     .catch((err) => {
-      console.log('ERROR');
       // If errors exists, redirect to error view And log up the error
       req.error = err;
       return next(req.error);

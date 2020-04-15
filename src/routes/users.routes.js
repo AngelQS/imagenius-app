@@ -3,7 +3,8 @@ const { Router } = require('express');
 
 // Middlewares
 const {
-  registryDataValidation: dataValidation,
+  inputDataValidation,
+  inputDataErrorHandler,
 } = require('../middlewares/user.middlewares');
 
 // Initializations
@@ -19,7 +20,7 @@ usersRouter
   .route('/users/signup')
 
   .get(renderSignUpForm)
-  .post(dataValidation, signUp);
+  .post(inputDataValidation, inputDataErrorHandler, signUp);
 
 usersRouter
   // Sign In route
