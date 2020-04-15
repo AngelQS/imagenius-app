@@ -1,15 +1,15 @@
 // Third
 const jwt = require('jsonwebtoken');
-const fse = require('fs-extra');
+//const fse = require('fs-extra');
 
 // Local
-const { IMAGENIUS_APP_SECRET: privateKey } = require('./env_vars.config');
+const { IMAGENIUS_APP_JWT_SECRET: secretKey } = require('./env_vars.config');
 const { User } = require('../models/index.model');
 
 // Initialization
 // const privateKey = fse.readFileSync('public.pem')
 const jwtUtils = {};
-const secret = privateKey || 'privateKey';
+const secret = secretKey || 'privateKey';
 const expiresTime = 3600000;
 
 jwtUtils.generate = (data) => {

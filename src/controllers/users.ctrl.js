@@ -1,10 +1,10 @@
 // Local
 const {
   jwt: jwtUtils,
-  sendgrid: makeMessage,
+  //sendgrid: makeMessage,
 } = require('../config/index.config');
 const { User } = require('../models/index.model');
-const insertTokenToHTML = require('../components/email.component');
+//const insertTokenToHTML = require('../components/email.component');
 
 // Initializations
 const usersCtrl = {};

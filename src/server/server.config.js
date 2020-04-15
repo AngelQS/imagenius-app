@@ -19,13 +19,15 @@ require('dotenv').config();
 const {
   APP_PORT,
   APP_ENVIRONMENT,
-  IMAGENIUS_APP_MONGODB_DATABASE,
+  IMAGENIUS_APP_MONGODB_DATABASE: database,
+  IMAGENIUS_APP_SESSION_SECRET: secretKey,
 } = require('../config/env_vars.config');
 const { error404, errorHandler } = require('../middlewares/error.middlewares');
 const mappingApp = require('../routes/index.routes');
 
 // Initializations
 const PORT = APP_PORT || 3000;
+const secret = secretKey || 'secretSession';
 
 const app = (app) => {
   // Settings
@@ -55,15 +57,16 @@ const app = (app) => {
       rolling: false, // change to true
       resave: false,
       saveUninitialized: false,
-      secret: 'secretEnvVar', // change to env var SESSION_SECRET
+      secret: secret,
       cookie: {
         //maxAge: 60000, // change to env var SESSION_LIFETIME
         sameSite: true,
         secure: APP_ENVIRONMENT === 'production',
+        httpOnly: true,
       },
       store: new MongoStore({
         secret: 'secretEnvVar',
-        dbName: IMAGENIUS_APP_MONGODB_DATABASE,
+        dbName: database,
         collection: 'sessions',
         mongooseConnection: mongoose.connection,
         ttl: 1 * 24 * 60 * 60, // 1 day. tll option overwrites cookie.maxAge
