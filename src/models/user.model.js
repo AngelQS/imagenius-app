@@ -1,9 +1,9 @@
 // Third
-const { Schema, model } = require('mongoose');
-const bcrypt = require('bcrypt');
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcrypt");
 
 // Local
-const capitalize = require('../helpers/capitalize');
+const capitalize = require("../helpers/capitalize");
 
 const userSchema = new Schema(
   {
@@ -33,16 +33,16 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-    active: {
+    isVerified: {
       type: Boolean,
       default: false,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // Schema pre hooks
-userSchema.pre('save', async function (next) {
+userSchema.pre("save", async function (next) {
   const user = this;
   new Promise(async function (resolve, reject) {
     // Cleaning user input data
@@ -51,16 +51,16 @@ userSchema.pre('save', async function (next) {
     user.email = user.email.toLowerCase();
 
     // Hashing the password
-    if (user.isModified('password')) {
+    if (user.isModified("password")) {
       const salt = bcrypt.genSaltSync(12);
       if (!salt) {
-        reject(Error('Unable to generate Salt'));
+        reject(Error("Unable to generate Salt"));
       }
 
       // Getting hashed password
       const hashedPassword = bcrypt.hashSync(user.password, salt);
       if (!hashedPassword) {
-        reject(Error('Unable to hash the user password'));
+        reject(Error("Unable to hash the user password"));
       }
 
       // Saving the hashing password
@@ -68,11 +68,11 @@ userSchema.pre('save', async function (next) {
     }
   })
     .then(() => {
-      console.log('NEXT()');
+      console.log("NEXT()");
       next();
     })
     .catch((err) => {
-      console.log('CATCH ERROR:', err);
+      console.log("CATCH ERROR:", err);
       next(err);
     });
 });
@@ -85,4 +85,14 @@ userSchema.methods.matchPassword = async function (password) {
   }
 };
 
-module.exports = model('User', userSchema);
+// Index created from mongodb client
+/* db.users.createIndex(
+  { createdAt: 1 },
+  {
+    name: "createdAtIndex",
+    expireAfterSeconds: 30,
+    partialFilterExpression: { isVerified: false },
+  }
+); */
+
+module.exports = model("User", userSchema);

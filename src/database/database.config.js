@@ -1,9 +1,9 @@
 // Third
-const mongoose = require('mongoose');
-const chalk = require('chalk');
+const mongoose = require("mongoose");
+const chalk = require("chalk");
 
 // Local
-const envVars = require('../config/env_vars.config');
+const envVars = require("../config/env_vars.config");
 
 // Initializations
 const { IMAGENIUS_APP_MONGODB_DATABASE, IMAGENIUS_APP_MONGODB_HOST } = envVars;
@@ -19,9 +19,7 @@ mongoose
   })
   .then((db) =>
     console.log(
-      successMark(
-        `>>> Database ${IMAGENIUS_APP_MONGODB_DATABASE} is connected`,
-      ),
-    ),
+      successMark(`>>> Database ${IMAGENIUS_APP_MONGODB_DATABASE} is connected`)
+    )
   )
   .catch((err) => console.log(errorMark(err)));

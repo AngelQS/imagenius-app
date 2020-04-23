@@ -1,49 +1,25 @@
 // Third
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 //const fse = require('fs-extra');
 
 // Local
-const { IMAGENIUS_APP_JWT_SECRET: secretKey } = require('./env_vars.config');
-const { User } = require('../models/index.model');
+const { IMAGENIUS_APP_JWT_SECRET: secretKey } = require("./env_vars.config");
+const { User } = require("../models/index.model");
 
 // Initialization
 // const privateKey = fse.readFileSync('public.pem')
 const jwtUtils = {};
-const secret = secretKey || 'privateKey';
-const expiresTime = 3600000;
+const secret = secretKey || "privateKey";
+const expiresTime = 86400000;
 
 jwtUtils.generate = (data) => {
   const userToken = new Promise((resolve, reject) => {
-    const token = jwt.sign(
-      { data },
-      secret,
-      { expiresIn: expiresTime },
-      //{ algorithm: 'HS512' },
-      (err, token) => {
-        setTimeout(async () => {
-          // Searching user to validate if his account has been verified.
-          const user = await User.findById(data.id);
-
-          // Handle error if there is no user
-          if (!user) {
-            return reject(
-              Error(
-                'Unable to find user to validate if his account has been verificated.',
-              ),
-            );
-          }
-
-          // Searching if user account is activated
-          if (!user.active) {
-            await User.deleteOne({ _id: data.id });
-          }
-        }, 10000);
-      },
-    );
-    if (!token) {
-      reject(Error('Unable to generate user token'));
+    try {
+      const token = jwt.sign({ data }, secret, { expiresIn: expiresTime });
+      return resolve(token);
+    } catch (err) {
+      return reject(err);
     }
-    resolve(token);
   })
     .then((token) => {
       return token;
@@ -59,7 +35,7 @@ jwtUtils.validate = (token) => {
   const isValid = new Promise((resolve, reject) => {
     const validation = jwt.verify(token, secret);
     if (!validation) {
-      reject(Error('Invalid token'));
+      reject(Error("Invalid token"));
     }
     resolve(validation);
   })

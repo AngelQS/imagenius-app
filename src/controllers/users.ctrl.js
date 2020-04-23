@@ -2,15 +2,15 @@
 const {
   jwt: jwtUtils,
   //sendgrid: makeMessage,
-} = require('../config/index.config');
-const { User } = require('../models/index.model');
+} = require("../config/index.config");
+const { User } = require("../models/index.model");
 //const insertTokenToHTML = require('../components/email.component');
 
 // Initializations
 const usersCtrl = {};
 
 usersCtrl.renderSignUpForm = (req, res) => {
-  return res.render('users/signup');
+  return res.render("users/signup");
 };
 
 usersCtrl.signUp = async (req, res, next) => {
@@ -25,11 +25,11 @@ usersCtrl.signUp = async (req, res, next) => {
         $or: [{ username }, { email }],
       });
       if (user) {
-        req.flash('error', 'Username or Email already in use');
-        return res.redirect('signup');
+        req.flash("error", "Username or Email already in use");
+        return res.redirect("signup");
       }
     } catch (err) {
-      req.flash('Something went wrong. Please try again later');
+      req.flash("Something went wrong. Please try again later");
     }
 
     // Save user to database
@@ -43,16 +43,18 @@ usersCtrl.signUp = async (req, res, next) => {
     };
     const userToken = await jwtUtils.generate(userData);
     if (!userToken) {
-      req.flash('error', 'Something went wrong. Please try again later');
-      return res.redirect('signup');
+      req.flash("error", "Something went wrong. Please try again later");
+      return res.redirect("signup");
       //return reject(Error('Unable to generate user token'));
     }
 
     // Saving the user
-    await newUser.save((err) => {
+    await newUser.save((err, user) => {
+      console.log("saving");
       if (err) {
-        req.flash('error', 'Something went wrong. Please try again later');
-        return res.redirect('signup');
+        console.log("error");
+        req.flash("error", "Something went wrong. Please try again later");
+        return res.redirect("signup");
         //return reject(Error('Unable to save user to database'));
       }
       return resolve();
@@ -61,10 +63,10 @@ usersCtrl.signUp = async (req, res, next) => {
     .then(() => {
       // If none errors, redirect to signin view
       req.flash(
-        'success',
-        'Please, activate your account through verification code we send you',
+        "success",
+        "Please, activate your account through verification code we send you"
       );
-      res.redirect('signin');
+      res.redirect("signin");
       return next();
     })
     .catch((err) => {
@@ -75,7 +77,7 @@ usersCtrl.signUp = async (req, res, next) => {
 };
 
 usersCtrl.renderSignInForm = (req, res) => {
-  res.render('users/signin');
+  res.render("users/signin");
 };
 
 module.exports = usersCtrl;
