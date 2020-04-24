@@ -1,5 +1,8 @@
 // Local
-const { hapi_joi: userValidationSchema } = require('../config/index.config');
+const {
+  hapi_joi: userValidationSchema,
+  jwt,
+} = require("../config/index.config");
 
 const userMiddlewares = {};
 
@@ -7,15 +10,15 @@ userMiddlewares.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   } else {
-    req.flash('error', 'You must be registered first.');
-    res.redirect('/');
+    req.flash("error", "You must be registered first.");
+    res.redirect("/");
   }
 };
 
 userMiddlewares.isNotAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
-    req.flash('error', 'You are already logged in.');
-    res.redirect('/');
+    req.flash("error", "You are already logged in.");
+    res.redirect("/");
   } else {
     return next();
   }
@@ -26,7 +29,7 @@ userMiddlewares.inputDataValidation = async (req, res, next) => {
     // Input data validation
     const result = userValidationSchema.validate(req.body);
     if (!result) {
-      return reject(Error('Unable to validate user input data'));
+      return reject(Error("Unable to validate user input data"));
     }
 
     // Resolving promise if not null
@@ -46,22 +49,51 @@ userMiddlewares.inputDataErrorHandler = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
     // Handle error if req.data is null
     if (!req.data) {
-      req.flash('error', 'Something went wrong. Please try again later');
-      return res.redirect('signup');
+      req.flash("error", "Something went wrong. Please try again later");
+      return res.redirect("signup");
     }
     // Getting user data from req.data
     const data = req.data;
     // Handle error if data containts errors
     if (data.error) {
       const dataError = data.error.details[0].message;
-      req.flash('error', dataError);
-      return res.redirect('signup');
+      req.flash("error", dataError);
+      return res.redirect("signup");
     }
 
     // Resolving promise if it has no errors
     return resolve();
   })
     .then(() => {
+      next();
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+userMiddlewares.generateToken = async (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.tokenPayload is null
+    if (!req.tokenPayload) {
+      req.flash("error", "Something went wrong. Please try again later.");
+      return res.redirect("signup");
+    }
+    // Getting user data from req.tokenPayload
+    const userData = req.tokenPayload;
+    // Generating the token using user data
+    const userToken = await jwtUtils.generate(userData);
+    if (!userToken) {
+      req.flash("error", "Something went wrong. Please try again later");
+      return res.redirect("signup");
+    }
+
+    // Resolving the promis if it has no errors
+    return resolve(userToken);
+  })
+    .then((userToken) => {
+      // Saving the verification token
+      req.verificationToken = userToken;
       next();
     })
     .catch((err) => {

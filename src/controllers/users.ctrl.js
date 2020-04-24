@@ -41,15 +41,16 @@ usersCtrl.signUp = async (req, res, next) => {
       username: newUser.username,
       email: newUser.email,
     };
-    const userToken = await jwtUtils.generate(userData);
+
+    /* const userToken = await jwtUtils.generate(userData);
     if (!userToken) {
       req.flash("error", "Something went wrong. Please try again later");
       return res.redirect("signup");
       //return reject(Error('Unable to generate user token'));
-    }
+    } */
 
     // Saving the user
-    await newUser.save((err, user) => {
+    await newUser.save((err) => {
       console.log("saving");
       if (err) {
         console.log("error");
@@ -57,15 +58,16 @@ usersCtrl.signUp = async (req, res, next) => {
         return res.redirect("signup");
         //return reject(Error('Unable to save user to database'));
       }
-      return resolve();
+      return resolve(userData);
     });
   })
-    .then(() => {
+    .then((userData) => {
       // If none errors, redirect to signin view
       req.flash(
         "success",
         "Please, activate your account through verification code we send you"
       );
+      req.tokenPayload = userData;
       res.redirect("signin");
       return next();
     })
