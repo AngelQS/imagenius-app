@@ -37,17 +37,10 @@ usersCtrl.signUp = async (req, res, next) => {
     const newUser = await new User(data.value);
     // Generating user token
     const userData = {
-      id: newUser._id,
+      _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
     };
-
-    /* const userToken = await jwtUtils.generate(userData);
-    if (!userToken) {
-      req.flash("error", "Something went wrong. Please try again later");
-      return res.redirect("signup");
-      //return reject(Error('Unable to generate user token'));
-    } */
 
     // Saving the user
     await newUser.save((err) => {

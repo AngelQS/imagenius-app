@@ -2,8 +2,11 @@
 const {
   hapi_joi: userValidationSchema,
   jwt,
+  sendgrid: sg,
 } = require("../config/index.config");
+const { User } = require("../models/index.model");
 
+// Initialization
 const userMiddlewares = {};
 
 userMiddlewares.isAuthenticated = (req, res, next) => {
@@ -11,14 +14,14 @@ userMiddlewares.isAuthenticated = (req, res, next) => {
     return next();
   } else {
     req.flash("error", "You must be registered first.");
-    res.redirect("/");
+    return res.redirect("/");
   }
 };
 
 userMiddlewares.isNotAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     req.flash("error", "You are already logged in.");
-    res.redirect("/");
+    return res.redirect("/");
   } else {
     return next();
   }
@@ -36,12 +39,12 @@ userMiddlewares.inputDataValidation = async (req, res, next) => {
     return resolve(result);
   })
     .then((result) => {
-      // Saving the validation result
+      // Saving the validation restoken = ult
       req.data = result;
-      next();
+      return next();
     })
     .catch((err) => {
-      next(err);
+      return next(err);
     });
 };
 
@@ -65,10 +68,10 @@ userMiddlewares.inputDataErrorHandler = async (req, res, next) => {
     return resolve();
   })
     .then(() => {
-      next();
+      return next();
     })
     .catch((err) => {
-      next(err);
+      return next(err);
     });
 };
 
@@ -76,29 +79,49 @@ userMiddlewares.generateToken = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
     // Handle error if req.tokenPayload is null
     if (!req.tokenPayload) {
-      req.flash("error", "Something went wrong. Please try again later.");
+      req.flash("error", "Something went wrong. Please try again later");
       return res.redirect("signup");
     }
     // Getting user data from req.tokenPayload
     const userData = req.tokenPayload;
     // Generating the token using user data
-    const userToken = await jwtUtils.generate(userData);
+    const userToken = await jwt.generate(userData);
     if (!userToken) {
       req.flash("error", "Something went wrong. Please try again later");
       return res.redirect("signup");
     }
 
-    // Resolving the promis if it has no errors
+    // Resolving the promise if it has no errors
     return resolve(userToken);
   })
     .then((userToken) => {
       // Saving the verification token
       req.verificationToken = userToken;
-      next();
+      return next();
     })
     .catch((err) => {
-      next(err);
+      req.flash("error", "Unable to send user token. Please try again later");
+      return res.redirect("errors/email-verification-error");
     });
+};
+
+userMiddlewares.makeSendgridMessage = async (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.verificationToken is null
+    if (!req.verificationToken) {
+      req.flash("error", "Unable to send message. Please try again later");
+      return res.redirect("errors/email-verification-error");
+    }
+    // Getting verification token from req.verificationToken
+    const verificationToken = req.verificationToken;
+    // Making sendgrid message
+    const result = sg.sendMessage(verificationToken);
+    // Validating the result
+    if (!result) {
+      req.flash("error", "Unable to make message. Please try again later");
+      return res.redirect("error/email-verification-error");
+    }
+  });
 };
 
 module.exports = userMiddlewares;

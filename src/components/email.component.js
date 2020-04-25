@@ -1,5 +1,5 @@
 const insertTokenToHTML = (token) => {
-  const emailPage = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  const emailVerificationPage = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html style="width:100%;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0;">
  <head> 
   <meta charset="UTF-8"> 
@@ -292,7 +292,7 @@ a[x-apple-data-detectors] {
   </div>  
  </body>
 </html>`;
-  return emailPage;
+  return emailVerificationPagePage;
 };
 
 module.exports = insertTokenToHTML;
