@@ -29,6 +29,10 @@ const mappingApp = require("../routes/index.routes");
 const PORT = APP_PORT || 3000;
 const secret = secretKey;
 
+/**
+ * Recives the express server to configure it.
+ * @param  {} app express instance
+ */
 const app = (app) => {
   // Settings
   app.set("port", PORT);

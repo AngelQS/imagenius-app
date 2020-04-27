@@ -110,18 +110,31 @@ userMiddlewares.makeSendgridMessage = async (req, res, next) => {
     // Handle error if req.verificationToken is null
     if (!req.verificationToken) {
       req.flash("error", "Unable to send message. Please try again later");
-      return res.redirect("errors/email-verification-error");
+      return reject(Error("Unable to send Sendgrid message"));
     }
     // Getting verification token from req.verificationToken
     const verificationToken = req.verificationToken;
     // Making sendgrid message
-    const result = sg.sendMessage(verificationToken);
+    const messageStatus = sg.sendMessage(verificationToken);
     // Validating the result
     if (!result) {
       req.flash("error", "Unable to make message. Please try again later");
-      return res.redirect("error/email-verification-error");
+      return reject(Error("Unable to make Sendgrid message"));
     }
-  });
+
+    // Resolving the problem if it has no errors
+    return resolve(messageStatus);
+  })
+    .then((messageStatus) => {
+      // Saving the message status
+      req.messageStatus = messageStatus;
+      return next();
+    })
+    .catch((err) => {
+      req.flash("Something went wrong. Please try again later");
+      res.redirect("error/email-verification-error");
+      return next(err);
+    });
 };
 
 module.exports = userMiddlewares;

@@ -6,7 +6,7 @@ const envVars = require("./env_vars.config");
 const insertTokenToHTML = require("../components/email.component");
 
 // Initializations
-const SENDGRID_AUTH_KEY = envVars.TWILIO_SENDGRID_AUTH_KEY;
+const SENDGRID_AUTH_KEY = envVars.SENDGRID_AUTH_KEY;
 
 // Setting auth key to sendgrid
 sgMail.setApiKey(SENDGRID_AUTH_KEY);

@@ -10,7 +10,7 @@ const { User } = require("../models/index.model");
 const usersCtrl = {};
 
 usersCtrl.renderSignUpForm = (req, res) => {
-  return res.render("users/signup");
+  return res.render("users/mobile-phone-validation"); // users/signup
 };
 
 usersCtrl.signUp = async (req, res, next) => {
