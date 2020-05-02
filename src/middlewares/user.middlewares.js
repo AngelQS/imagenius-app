@@ -152,8 +152,9 @@ userMiddlewares.generateToken = async (req, res, next) => {
       return next();
     })
     .catch((err) => {
-      req.flash("error", "Unable to send user token. Please try again later");
-      return res.redirect("errors/email-verification-error");
+      //req.flash("error", "Unable to send user token. Please try again later");
+      //return res.redirect("errors/email-verification-error");
+      next(err);
     });
 };
 
@@ -169,31 +170,39 @@ userMiddlewares.generateToken = async (req, res, next) => {
 userMiddlewares.makeSendgridMessage = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
     // Handle error if req.verificationT  oken is null
+    console.log("MAKE SENDGRID MESSAGE");
     if (!req.verificationToken) {
-      req.flash("error", "Unable to send message. Please try again later");
+      console.log("!req.verificationToken NO EXISTE");
       return reject(Error("Unable to send Sendgrid message"));
     }
     // Getting verification token from req.verificationToken
     const verificationToken = req.verificationToken;
+    console.log("verificationToken:", verificationToken);
     // Making sendgrid message
-    const messageStatus = await sgService.sendMessage("fe", verificationToken);
+    const messageStatus = sgService.sendMessage(
+      "developer.aqs@gmail.com",
+      verificationToken
+    );
+    console.log("messageStatus:", messageStatus);
     // Validating the result
+    console.log("ANTES DEL IF");
     if (!messageStatus) {
-      req.flash("error", "Unable to make message. Please try again later");
+      console.log("messageStatus ERROR");
       return reject(Error("Unable to make Sendgrid message"));
     }
-
+    console.log("RESOLVING PROMISE");
     // Resolving the problem if it has no errors
-    return resolve(messageStatus);
+    return resolve();
   })
-    .then((messageStatus) => {
+    .then(() => {
+      console.log("COMPLETADO");
       // Saving the message status
-      req.messageStatus = messageStatus;
-      return next();
+      //req.messageStatus = messageStatus;
     })
     .catch((err) => {
-      req.flash("Something went wrong. Please try again later");
-      res.redirect("error/email-verification-error");
+      console.log("CATCH ERROR SENDGRID");
+      //req.flash("Something went wrong. Please try again later");
+      //res.redirect("error/email-verification-error");
       return next(err);
     });
 };

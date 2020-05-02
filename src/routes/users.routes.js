@@ -12,6 +12,7 @@ const {
   inputDataValidation,
   inputDataErrorHandler,
   generateToken,
+  makeSendgridMessage,
   //makeSendgridMessage,
 } = require("../middlewares/user.middlewares");
 
@@ -39,7 +40,13 @@ usersRouter
    * @name User Sign Up
    * @path {POST} /users/signup
    */
-  .post(inputDataValidation, inputDataErrorHandler, signUp, generateToken);
+  .post(
+    inputDataValidation,
+    inputDataErrorHandler,
+    signUp,
+    generateToken,
+    makeSendgridMessage
+  );
 
 // Sign In route
 usersRouter

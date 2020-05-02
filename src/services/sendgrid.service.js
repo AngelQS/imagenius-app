@@ -35,11 +35,11 @@ sgMail.setApiKey(AUTH_KEY);
  * @returns {Promise<boolean>} Returns the state of message.
  */
 sgService.sendMessage = async (to, token) => {
-  try {
+  const messageStatus = new Promise(async (resolve, reject) => {
     // Inserting token to email verification page
     const html = insertTokenToHTML(token);
     const msg = {
-      to,
+      to: "developer.aqs@gmail.com",
       from: "aedwin.acuario31@gmail.com",
       subject: "Email verification",
       text: "Verify your Imagenius account",
@@ -52,13 +52,21 @@ sgService.sendMessage = async (to, token) => {
      * @param {object} msg Message body to be sended.
      * @returns Message status.
      */
-    await sgMail.send(msg);
-    console.log("Message has been send");
-    return true;
-  } catch (err) {
-    console.log("ERROR ON SENDING SENGRID MESSAGE:", err);
-    return false;
-  }
+    const status = await sgMail.send(msg);
+    if (!status) {
+      return reject(Error("Unable to send the message"));
+    }
+    return resolve(status);
+  })
+    .then((status) => {
+      return status;
+    })
+    .catch((err) => {
+      console.log("ERROR ON SENDING SENGRID MESSAGE:", err);
+      return err;
+    });
+  console.log("messageStatus on Service:", messageStatus);
+  return messageStatus;
 };
 
 module.exports = sgService;

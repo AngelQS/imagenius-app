@@ -93,9 +93,9 @@ jwtService.decode = (token) => {
      */
     const validation = jwt.verify(token, secret);
     if (!validation) {
-      reject(Error("Invalid token"));
+      return reject(Error("Invalid token"));
     }
-    resolve(validation);
+    return resolve(validation);
   })
     .then((validation) => {
       return validation;
