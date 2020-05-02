@@ -11,6 +11,8 @@ const { Router } = require("express");
 const {
   inputDataValidation,
   inputDataErrorHandler,
+  generateToken,
+  //makeSendgridMessage,
 } = require("../middlewares/user.middlewares");
 
 // Initializations
@@ -37,7 +39,7 @@ usersRouter
    * @name User Sign Up
    * @path {POST} /users/signup
    */
-  .post(inputDataValidation, inputDataErrorHandler, signUp);
+  .post(inputDataValidation, inputDataErrorHandler, signUp, generateToken);
 
 // Sign In route
 usersRouter

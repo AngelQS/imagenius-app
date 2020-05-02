@@ -11,14 +11,17 @@ const {
    * @see userValidationSchema
    */
   hapi_joi: userValidationSchema,
-  jwt,
+} = require("../config/index.config");
+
+const {
+  jwtService,
   /**
    * Sendgrid mail service
    * @type {object}
    * @see {@link module:Services/Sendgrid|Sendgrid Service}
    */
-  sendgrid: sg,
-} = require("../config/index.config");
+  sgService,
+} = require("../services/index.service");
 const { User } = require("../models/index.model");
 
 // Initialization
@@ -70,7 +73,7 @@ userMiddlewares.inputDataValidation = async (req, res, next) => {
     return resolve(result);
   })
     .then((result) => {
-      // Saving the validation restoken = ult
+      // Saving the validation result
       req.data = result;
       return next();
     })
@@ -132,9 +135,9 @@ userMiddlewares.generateToken = async (req, res, next) => {
       return res.redirect("signup");
     }
     // Getting user data from req.tokenPayload
-    const userData = req.tokenPayload;
-    // Generating the token using user data
-    const userToken = await jwt.generate(userData);
+    const payload = req.tokenPayload;
+    // Generating the token using payload
+    const userToken = await jwtService.encode(payload);
     if (!userToken) {
       req.flash("error", "Something went wrong. Please try again later");
       return res.redirect("signup");
@@ -173,7 +176,7 @@ userMiddlewares.makeSendgridMessage = async (req, res, next) => {
     // Getting verification token from req.verificationToken
     const verificationToken = req.verificationToken;
     // Making sendgrid message
-    const messageStatus = await sg.sendMessage("fe", verificationToken);
+    const messageStatus = await sgService.sendMessage("fe", verificationToken);
     // Validating the result
     if (!messageStatus) {
       req.flash("error", "Unable to make message. Please try again later");

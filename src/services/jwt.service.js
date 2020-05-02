@@ -9,9 +9,10 @@ const jwt = require("jsonwebtoken");
 //const fse = require('fs-extra');
 
 // Local
-const { IMAGENIUS_APP_JWT_SECRET: secretKey } = require("./env_vars.config");
+const { envVars } = require("../config/index.config");
 
 // Initialization
+const secretKey = envVars.IMAGENIUS_APP_JWT_SECRET;
 // const privateKey = fse.readFileSync('public.pem')
 
 /**

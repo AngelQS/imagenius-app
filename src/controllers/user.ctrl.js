@@ -31,7 +31,7 @@ const userCtrl = {};
  */
 userCtrl.renderSignUpForm = (req, res, next) => {
   try {
-    return res.render("users/mobile-phone-validation"); // users/signup
+    return res.render("users/signup"); // users/mobile-phone-validation
   } catch (err) {
     return next(err);
   }
@@ -91,16 +91,13 @@ userCtrl.signUp = async (req, res, next) => {
     };
 
     // Saving the user
-    await newUser.save((err) => {
-      console.log("saving");
-      if (err) {
-        console.log("error");
-        req.flash("error", "Something went wrong. Please try again later");
-        return res.redirect("signup");
-        //return reject(Error('Unable to save user to database'));
-      }
+    try {
+      newUser.save();
       return resolve(userData);
-    });
+    } catch (err) {
+      req.flash("error", "Something went wrong. Please try again later");
+      return reject(Error("Unable to save new user"));
+    }
   })
     .then((userData) => {
       // If none errors, redirect to signin view

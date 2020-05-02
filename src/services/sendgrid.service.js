@@ -8,7 +8,7 @@
 const sgMail = require("@sendgrid/mail");
 
 // Local
-const envVars = require("./env_vars.config");
+const { envVars } = require("../config/index.config");
 const insertTokenToHTML = require("../components/email.component");
 
 // Initializations
