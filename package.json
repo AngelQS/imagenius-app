@@ -1,12 +1,13 @@
 {
   "name": "imagenius-app",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "App for share and comment photos.",
   "main": "index.js",
   "scripts": {
-    "prepublish": "retire",
     "start": "node index.js",
-    "dev": "nodemon -r dotenv/config src/index.js"
+    "start:dev": "nodemon -r dotenv/config src/index.js",
+    "doc": "jsdoc -c jsdoc.json src/",
+    "clean": "rimraf docs/"
   },
   "author": "AngelQS",
   "license": "ISC",
@@ -22,11 +23,13 @@
     "express-session": "^1.17.0",
     "fs-extra": "^9.0.0",
     "jsonwebtoken": "^8.5.1",
+    "later": "^1.2.0",
     "md5": "^2.2.1",
     "method-override": "^3.0.0",
     "moment": "^2.24.0",
     "mongoose": "^5.9.5",
     "multer": "^1.4.2",
+    "node-cron": "^2.0.3",
     "nodemailer": "^6.4.6",
     "nunjucks": "^3.2.1",
     "passport": "^0.4.1",
@@ -37,9 +40,14 @@
     "twilio": "^3.41.1"
   },
   "devDependencies": {
+    "better-docs": "^2.0.0",
     "chalk": "^3.0.0",
     "dotenv": "^8.2.0",
+    "jsdoc": "^3.6.4",
+    "jsdoc-http-plugin": "^0.3.2",
+    "jsdoc-mermaid": "^1.0.0",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "rimraf": "^3.0.2"
   }
 }

@@ -1,3 +1,9 @@
+/**
+ * @module Sendgrid
+ * @category Modules
+ * @subcategory Services
+ */
+
 // Third
 const sgMail = require("@sendgrid/mail");
 
@@ -6,13 +12,29 @@ const envVars = require("./env_vars.config");
 const insertTokenToHTML = require("../components/email.component");
 
 // Initializations
-const SENDGRID_AUTH_KEY = envVars.SENDGRID_AUTH_KEY;
+/**
+ * @namespace sgService
+ * @property {method} sendMessage Sends a email using Twilio services.
+ */
+const sgService = {};
+
+/** Sendgrid Auth Key.
+ * @type {string}
+ */
+const AUTH_KEY = envVars.SENDGRID_AUTH_KEY;
 
 // Setting auth key to sendgrid
-sgMail.setApiKey(SENDGRID_AUTH_KEY);
+sgMail.setApiKey(AUTH_KEY);
 
 // Making the message to send to user email
-const sendMessage = async (to, token) => {
+/**
+ * @description Sends a email using Twilio services.
+ * @method sendMessage
+ * @param  {string} to Email of the user to whom a message will be sent.
+ * @param  {string} token User token to will be pass to insertTokenToHTML function.
+ * @returns {Promise<boolean>} Returns the state of message.
+ */
+sgService.sendMessage = async (to, token) => {
   try {
     // Inserting token to email verification page
     const html = insertTokenToHTML(token);
@@ -23,6 +45,13 @@ const sendMessage = async (to, token) => {
       text: "Verify your Imagenius account",
       html,
     };
+    /**
+     * @description Signs the token.
+     * @inner
+     * @method sendMessage:send
+     * @param {object} msg Message body to be sended.
+     * @returns Message status.
+     */
     await sgMail.send(msg);
     console.log("Message has been send");
     return true;
@@ -32,4 +61,4 @@ const sendMessage = async (to, token) => {
   }
 };
 
-module.exports = sendMessage;
+module.exports = sgService;

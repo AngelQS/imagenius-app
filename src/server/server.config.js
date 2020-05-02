@@ -27,11 +27,12 @@ const mappingApp = require("../routes/index.routes");
 
 // Initializations
 const PORT = APP_PORT || 3000;
-const secret = secretKey;
 
 /**
- * Recives the express server to configure it.
- * @param  {} app express instance
+ * @description Receives the express server to configure it.
+ * @function app
+ * @param  {object} app express instance.
+ * @returns {object} App configurated.
  */
 const app = (app) => {
   // Settings
@@ -61,7 +62,7 @@ const app = (app) => {
       rolling: false, // change to true
       resave: false,
       saveUninitialized: false,
-      secret: secret,
+      secret: secretKey,
       cookie: {
         //maxAge: 60000, // change to env var SESSION_LIFETIME
         sameSite: true,

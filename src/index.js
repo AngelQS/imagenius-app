@@ -12,13 +12,13 @@ const successMark = chalk.bold.yellow;
 const errorMark = chalk.bold.red;
 
 /**
- * @file index.js is the root file for this app
+ * @file An App for sharing fantastic images.
  * @name Imagenius App
- * @license MIT
- * @author Angel Quiroz Soriano
- * @version 1.0
- * @see <a href="https://github.com/backlabs">Backlabs Team</a>
- * @copyright Backlabs@2020
+ * @license {@link https://opensource.org/licenses/MIT|MIT}
+ * @author {@link https://github.com/AngelQS|AngelQS}
+ * @version 0.0.3
+ * @see {@link https://github.com/backlabs|Backlabs Team}
+ * @copyright @ 2020 Backlabs
  */
 
 app.listen(app.get("port"), () => {

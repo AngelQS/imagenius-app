@@ -1,0 +1,42 @@
+{
+  "plugins": [
+    "plugins/markdown",
+    "jsdoc-mermaid",
+    "node_modules/better-docs/category",
+    "jsdoc-http-plugin"
+  ],
+
+  "source": {
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "search": true,
+    "better-docs": {
+      "logo": "/src/public/assets/img/imagenius-docs-logo.png",
+      "title": "Imagenius Docs",
+      "hideGenerator": false,
+      "navigation": [
+        {
+          "label": "Github",
+          "href": "https://github.com/orgs/backlabs/teams/developer"
+        }
+      ]
+    }
+  },
+  "opts": {
+    "readme": "./README.md",
+    "encoding": "utf8",
+    "destination": "./docs/",
+    "recurse": true,
+    "tutorials": "./tutorials",
+    "template": "node_modules/better-docs/"
+  }
+}

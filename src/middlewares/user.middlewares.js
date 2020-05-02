@@ -1,12 +1,34 @@
+/**
+ * @module User Middlewares
+ * @category Modules
+ * @subcategory Middlewares
+ */
 // Local
 const {
+  /**
+   * User validation schema
+   * @type {object}
+   * @see userValidationSchema
+   */
   hapi_joi: userValidationSchema,
   jwt,
+  /**
+   * Sendgrid mail service
+   * @type {object}
+   * @see {@link module:Services/Sendgrid|Sendgrid Service}
+   */
   sendgrid: sg,
 } = require("../config/index.config");
 const { User } = require("../models/index.model");
 
 // Initialization
+/**
+ * @namespace userMiddleware
+ * @property {method} inputDataValidation Validates input data.
+ * @property {method} inputDataErrorHandler Handles the errors from input data.
+ * @property {method} generateToken Receives the user input data to generate a token.
+ * @property {method} makeSendgridMessage Send an email to user to verify his account
+ */
 const userMiddlewares = {};
 
 userMiddlewares.isAuthenticated = (req, res, next) => {
@@ -27,6 +49,15 @@ userMiddlewares.isNotAuthenticated = (req, res, next) => {
   }
 };
 
+/**
+ * @description Validates input data.
+ * @method inputDataValidation
+ * @param {object} req Express Request object.
+ * @param {object} res Express Response object.
+ * @param {function} next Express Next middleware function.
+ * @returns {Promise<void>} If none errors, continues with the next middleware, otherwise, is handled by the errorHandler middleware.
+ * @see {@link module:Middlewares/Errors|Error Middlewares}
+ */
 userMiddlewares.inputDataValidation = async (req, res, next) => {
   new Promise((resolve, reject) => {
     // Input data validation
@@ -48,6 +79,15 @@ userMiddlewares.inputDataValidation = async (req, res, next) => {
     });
 };
 
+/**
+ * @description Handles the errors from input data.
+ * @method inputDataErrorHandler
+ * @param {object} req Express Request object.
+ * @param {object} res Express Response object.
+ * @param {function} next Express Next middleware function.
+ * @returns {Promise<void>} If none errors, continues with the next middleware, otherwise, is handled by the errorHandler middleware.
+ * @see {@link module:Middlewares/Errors|Error Middlewares}
+ */
 userMiddlewares.inputDataErrorHandler = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
     // Handle error if req.data is null
@@ -75,6 +115,15 @@ userMiddlewares.inputDataErrorHandler = async (req, res, next) => {
     });
 };
 
+/**
+ * @description Receives the user input data to generate a token.
+ * @method generateToken
+ * @param {object} req Express Request object.
+ * @param {object} res Express Response object.
+ * @param {function} next Express Next middleware function.
+ * @returns {Promise<void>} If none errors, continues with the next middleware, otherwise, is handled by the errorHandler middleware.
+ * @see {@link module:Middlewares/Errors|Error Middlewares}
+ */
 userMiddlewares.generateToken = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
     // Handle error if req.tokenPayload is null
@@ -105,9 +154,18 @@ userMiddlewares.generateToken = async (req, res, next) => {
     });
 };
 
+/**
+ * @description Send a email to user to verify his account.
+ * @method makeSendgridMessage
+ * @param {object} req Express Request object.
+ * @param {object} res Express Response object.
+ * @param {function} next Express Next middleware function.
+ * @returns {Promise<void>} If none errors, continues with the next middleware, otherwise, is handled by the errorHandler middleware.
+ * @see {@link module:Middlewares/Errors|Error Middlewares}
+ */
 userMiddlewares.makeSendgridMessage = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
-    // Handle error if req.verificationToken is null
+    // Handle error if req.verificationT  oken is null
     if (!req.verificationToken) {
       req.flash("error", "Unable to send message. Please try again later");
       return reject(Error("Unable to send Sendgrid message"));
@@ -115,9 +173,9 @@ userMiddlewares.makeSendgridMessage = async (req, res, next) => {
     // Getting verification token from req.verificationToken
     const verificationToken = req.verificationToken;
     // Making sendgrid message
-    const messageStatus = sg.sendMessage(verificationToken);
+    const messageStatus = await sg.sendMessage("fe", verificationToken);
     // Validating the result
-    if (!result) {
+    if (!messageStatus) {
       req.flash("error", "Unable to make message. Please try again later");
       return reject(Error("Unable to make Sendgrid message"));
     }

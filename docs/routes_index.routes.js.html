@@ -1,0 +1,178 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Imagenius Docs routes/index.routes.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+<body class="layout">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+             
+                <a class="image" href="index.html">
+                    <img src="/src/public/assets/img/imagenius-docs-logo.png" alt="logo">
+                </a>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                <div class="dropdown is-hoverable is-right">
+                    <a class="dropdown-trigger link">
+                        Tutorials
+                        <i class="fas fa-chevron-down fa-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-content">
+                        
+                            
+                                <a class="dropdown-item" href="tutorial-first-example.html">
+                                    First example
+                                </a>
+                            
+                                <a class="dropdown-item" href="tutorial-second-example.html">
+                                    Second example
+                                </a>
+                            
+                        
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="module-Error%2520Middleware-errorMiddleware.html">errorMiddleware</a></li><li><a href="module-Index%2520Controller-indexCtrl.html">indexCtrl</a></li><li><a href="module-JWT-jwtService.html">jwtService</a></li><li><a href="module-Sendgrid-sgService.html">sgService</a></li><li><a href="module-User%2520Controller-userCtrl.html">userCtrl</a></li><li><a href="module-User%2520Middlewares-userMiddleware.html">userMiddleware</a></li></ul><h3>Global</h3><ul><li><a href="global.html#app">app</a></li></ul></div><div class="category"><h2>Modules</h2><h3>Modules / Middlewares</h3><ul><li><a href="module-Error%2520Middleware.html">Error Middleware</a></li><li><a href="module-User%2520Middlewares.html">User Middlewares</a></li></ul><h3>Modules / Controllers</h3><ul><li><a href="module-Index%2520Controller.html">Index Controller</a></li><li><a href="module-User%2520Controller.html">User Controller</a></li></ul><h3>Modules / Routes</h3><ul><li><a href="module-Index%2520Routes.html">Index Routes</a></li><li><a href="module-User%2520Routes.html">User Routes</a></li></ul><h3>Modules / Services</h3><ul><li><a href="module-JWT.html">JWT</a></li><li><a href="module-Sendgrid.html">Sendgrid</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>routes/index.routes.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module Index Routes
+ * @category Modules
+ * @subcategory Routes
+ */
+
+// Third
+const { Router } = require("express");
+
+// Local
+const indexCtrl = require("../controllers/index.ctrl");
+const usersRouter = require("./users.routes");
+
+// Initializations
+const indexRouter = Router();
+
+/**
+ * @description Mapping the express server.
+ * @function mappingApp
+ * @param {object} app Express instance.
+ */
+const mappingApp = (app) => {
+  /**
+   * @description Gets the index view.
+   * @name Get Index
+   * @path {GET} /
+   */
+  indexRouter.get("/", indexCtrl.renderIndex);
+
+  // Route application
+  app.use(indexRouter);
+  app.use(usersRouter);
+};
+
+module.exports = mappingApp;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

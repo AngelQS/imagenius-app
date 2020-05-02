@@ -3,7 +3,7 @@ const { Schema, model } = require("mongoose");
 const bcrypt = require("bcrypt");
 
 // Local
-const capitalize = require("../helpers/capitalize");
+const capitalize = require("../utils/capitalize");
 
 const userSchema = new Schema(
   {

@@ -1,11 +1,17 @@
+/**
+ * @module User Routes
+ * @category Modules
+ * @subcategory Routes
+ */
+
 // Third
-const { Router } = require('express');
+const { Router } = require("express");
 
 // Middlewares
 const {
   inputDataValidation,
   inputDataErrorHandler,
-} = require('../middlewares/user.middlewares');
+} = require("../middlewares/user.middlewares");
 
 // Initializations
 const usersRouter = Router();
@@ -13,19 +19,35 @@ const {
   renderSignUpForm,
   signUp,
   renderSignInForm,
-} = require('../controllers/users.ctrl');
+} = require("../controllers/user.ctrl");
 
+// Sign Up route
 usersRouter
-  // Sign Up route
-  .route('/users/signup')
+  .route("/users/signup")
 
+  /**
+   * @description Gets the sign up view.
+   * @name Render Sign Up
+   * @path {GET} /users/signup
+   */
   .get(renderSignUpForm)
+
+  /**
+   * @description User sign up logic.
+   * @name User Sign Up
+   * @path {POST} /users/signup
+   */
   .post(inputDataValidation, inputDataErrorHandler, signUp);
 
+// Sign In route
 usersRouter
-  // Sign In route
-  .route('/users/signin')
+  .route("/users/signin")
 
+  /**
+   * @description Gets the sign in view.
+   * @name Render Sign In
+   * @path {GET} /users/signin
+   */
   .get(renderSignInForm);
 
 module.exports = usersRouter;
