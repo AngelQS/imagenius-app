@@ -14,6 +14,7 @@ const {
   generateToken,
   makeSendgridMessage,
   //makeSendgridMessage,
+  verifyQueries,
 } = require("../middlewares/user.middlewares");
 
 // Initializations
@@ -71,7 +72,7 @@ usersRouter
    * @path {GET} /accounts/verify
    */
 
-  .get(renderPhoneNumberVerification)
+  .get(verifyQueries, renderPhoneNumberVerification)
   /**
    * @description Sends the verification code to user phone number.
    * @name Send Verification Code

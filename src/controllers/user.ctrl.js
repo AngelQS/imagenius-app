@@ -61,7 +61,14 @@ userCtrl.renderSignUpForm = (req, res, next) => {
  */
 userCtrl.signUp = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
+    // Handle error if req.data is null
+    if (!req.data) {
+      return reject(Error("Unable to find user data"));
+    }
+
+    // Getting user data from req.data
     const data = req.data;
+
     // Checking if user already exists
     const username = data.value.username;
     const email = data.value.email;
@@ -126,6 +133,7 @@ userCtrl.signUp = async (req, res, next) => {
  */
 userCtrl.renderSignInForm = (req, res, next) => {
   try {
+    //
     return res.render("users/signin");
   } catch (err) {
     return next(err);
@@ -142,7 +150,6 @@ userCtrl.renderSignInForm = (req, res, next) => {
  */
 userCtrl.renderPhoneNumberVerification = (req, res, next) => {
   try {
-    console.log("QUERY TOKEN:", req.query.token);
     return res.render("users/mobile-phone-verification");
   } catch (err) {
     return next(err);
@@ -155,7 +162,7 @@ userCtrl.renderPhoneNumberVerification = (req, res, next) => {
  * @param {object} req Express Request object.
  * @param {object} res Express Response object.
  * @param {function} next Express Next middleware function.
- * @returns {Promise<Number|Error>} Redirects to code verification view.
+ * @returns {Promise<numberError>} Redirects to code verification view.
  */
 userCtrl.verifyPhoneNumber = (req, res, next) => {
   new Promise(async (resolve, reject) => {

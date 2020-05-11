@@ -169,40 +169,51 @@ userMiddlewares.generateToken = async (req, res, next) => {
  */
 userMiddlewares.makeSendgridMessage = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
-    // Handle error if req.verificationT  oken is null
-    console.log("MAKE SENDGRID MESSAGE");
+    // Handle error if req.verificationToken is null
     if (!req.verificationToken) {
-      console.log("!req.verificationToken NO EXISTE");
       return reject(Error("Unable to send Sendgrid message"));
     }
     // Getting verification token from req.verificationToken
     const verificationToken = req.verificationToken;
-    console.log("verificationToken:", verificationToken);
     // Making sendgrid message
     const messageStatus = sgService.sendMessage(
       "developer.aqs@gmail.com",
       verificationToken
     );
-    console.log("messageStatus:", messageStatus);
     // Validating the result
-    console.log("ANTES DEL IF");
     if (!messageStatus) {
-      console.log("messageStatus ERROR");
       return reject(Error("Unable to make Sendgrid message"));
     }
-    console.log("RESOLVING PROMISE");
     // Resolving the problem if it has no errors
     return resolve();
   })
     .then(() => {
-      console.log("COMPLETADO");
       // Saving the message status
       //req.messageStatus = messageStatus;
     })
     .catch((err) => {
-      console.log("CATCH ERROR SENDGRID");
       //req.flash("Something went wrong. Please try again later");
       //res.redirect("error/email-verification-error");
+      return next(err);
+    });
+};
+
+userMiddlewares.verifyQueries = (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.query is null
+    if (!req.query.token) {
+      return reject(Error("Unable to find the activation token"));
+    }
+
+    // Resolving the promise if not null
+    return resolve(req.query.token);
+  })
+    .then((token) => {
+      // Saving the activation token
+      req.activationToken = token;
+      return next();
+    })
+    .catch((err) => {
       return next(err);
     });
 };
