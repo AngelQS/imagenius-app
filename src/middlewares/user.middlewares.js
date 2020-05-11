@@ -218,7 +218,7 @@ userMiddlewares.verifyQueries = (req, res, next) => {
     });
 };
 
-userMiddlewares.matchWithUserToken = (req, res, next) => {
+userMiddlewares.matchQueryWithUserToken = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
     // Handle error if req.activationToken is null
     if (!req.activationToken) {
@@ -228,18 +228,43 @@ userMiddlewares.matchWithUserToken = (req, res, next) => {
     // Getting the activation token from req.activationToken
     const activationToken = req.activationToken;
 
-    // Find the activation token on User model
-    const userToken = User.findOne({ token: activationToken });
+    // Decoding the token to find user
+    const tokenDecoded = await jwtService.decode(activationToken);
 
     // Throwing error if userToken does not exist
-    if (!userToken) {
-      return reject(Error("Unable to find user token. It does not exist"));
+    if (!tokenDecoded) {
+      return reject(Error("Unable to decode user token. Invalid user token"));
+    }
+
+    // Getting the decoded user data
+    const _id = tokenDecoded.data._id;
+    const username = tokenDecoded.data.username;
+    const email = tokenDecoded.data.email;
+
+    // Find the activation token on User model
+    const user = await User.findOne({
+      $and: [{ _id }, { username }, { email }],
+    });
+
+    // Handle error if user does not exist
+    if (!user) {
+      return reject(Error("Unable to find user. It does not exist"));
+    }
+
+    // Getting the user account status
+    const isVerified = user.isVerified;
+
+    // Redirect to sign up view if user account is verified
+    if (isVerified) {
+      return res.redirect("users/signup");
     }
 
     // Resolving the promise if user token exist
-    return resolve();
+    return resolve(user);
   })
-    .then(() => {
+    .then((user) => {
+      // Saving the user to req.userDecoded
+      req.userDecoded = user;
       return next();
     })
     .catch((err) => {

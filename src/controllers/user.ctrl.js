@@ -93,8 +93,8 @@ userCtrl.signUp = async (req, res, next) => {
     // Generating user token payload
     const userData = {
       _id: newUser._id,
-      username: newUser.username,
-      email: newUser.email,
+      username: newUser.username.toLowerCase(),
+      email: newUser.email.toLowerCase(),
     };
 
     // Saving the user

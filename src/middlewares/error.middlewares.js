@@ -54,7 +54,7 @@ errorMiddlewares.errorHandler = (err, req, res, next) => {
   console.log(errorMark(meta));
   console.log(errorMark(err));
   res.contentType("application/json");
-  res.status(500).send("<p>Meta: ${meta}</p><p>Error: ${err}</p>");
+  res.status(500).send(`<p>Meta: ${meta}</p><p>Error: ${err}</p>`);
 };
 
 module.exports = errorMiddlewares;
