@@ -202,7 +202,7 @@ userMiddlewares.verifyQueries = (req, res, next) => {
   new Promise(async (resolve, reject) => {
     // Handle error if req.query is null
     if (!req.query.token) {
-      return reject(Error("Unable to find the activation token"));
+      return reject(Error("Unable to find the query token"));
     }
 
     // Resolving the promise if not null
@@ -211,6 +211,35 @@ userMiddlewares.verifyQueries = (req, res, next) => {
     .then((token) => {
       // Saving the activation token
       req.activationToken = token;
+      return next();
+    })
+    .catch((err) => {
+      return next(err);
+    });
+};
+
+userMiddlewares.matchWithUserToken = (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.activationToken is null
+    if (!req.activationToken) {
+      return reject(Error("Unable to find the activation token"));
+    }
+
+    // Getting the activation token from req.activationToken
+    const activationToken = req.activationToken;
+
+    // Find the activation token on User model
+    const userToken = User.findOne({ token: activationToken });
+
+    // Throwing error if userToken does not exist
+    if (!userToken) {
+      return reject(Error("Unable to find user token. It does not exist"));
+    }
+
+    // Resolving the promise if user token exist
+    return resolve();
+  })
+    .then(() => {
       return next();
     })
     .catch((err) => {
