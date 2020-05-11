@@ -63,6 +63,11 @@ userMiddlewares.isNotAuthenticated = (req, res, next) => {
  */
 userMiddlewares.inputDataValidation = async (req, res, next) => {
   new Promise((resolve, reject) => {
+    // Handle error if req.body is null
+    if (!req.body) {
+      return reject(Error("Unable to get request body"));
+    }
+
     // Input data validation
     const result = userValidationSchema.validate(req.body);
     if (!result) {
@@ -269,6 +274,29 @@ userMiddlewares.matchQueryWithUserToken = async (req, res, next) => {
     })
     .catch((err) => {
       return next(err);
+    });
+};
+
+userMiddlewares.getInputPhoneNumber = (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.phoneNumber is null
+    if (!req.body.phoneNumber) {
+      return reject(Error("Unable to get request body"));
+    }
+
+    // Getting the phoneNumber from req.body.phoneNumber
+    const phoneNumber = req.body.phoneNumber;
+
+    // Resolving promise if not null
+    return resolve(phoneNumber);
+  })
+    .then((phoneNumber) => {
+      // Saving the phone number
+      req.phoneNumber = phoneNumber;
+      return next();
+    })
+    .catch((err) => {
+      return next();
     });
 };
 
