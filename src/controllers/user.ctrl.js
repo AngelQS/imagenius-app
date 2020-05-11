@@ -132,4 +132,44 @@ userCtrl.renderSignInForm = (req, res, next) => {
   }
 };
 
+/**
+ * @description Renders the phone number verification page.
+ * @method renderPhoneNumberVerification
+ * @param {object} req Request object.
+ * @param {object} res Response object.
+ * @param {object} next Next object.
+ * @returns {undefined} Phone number verification view.
+ */
+userCtrl.renderPhoneNumberVerification = (req, res, next) => {
+  try {
+    console.log("QUERY TOKEN:", req.query.token);
+    return res.render("users/mobile-phone-verification");
+  } catch (err) {
+    return next(err);
+  }
+};
+
+/**
+ * @description Controller that sends the verification code to user phone number.
+ * @method verifyPhoneNumber
+ * @param {object} req Express Request object.
+ * @param {object} res Express Response object.
+ * @param {function} next Express Next middleware function.
+ * @returns {Promise<Number|Error>} Redirects to code verification view.
+ */
+userCtrl.verifyPhoneNumber = (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    console.log("PHONE NUMBER:", req.body);
+    // verificar la existencia de las query middleware
+    // capturar las query middleware
+    // validar el token middleware
+    // capturar el req.body.phoneNumber
+    // enviar un mensaje de texto o llamada
+  })
+    .then()
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = userCtrl;

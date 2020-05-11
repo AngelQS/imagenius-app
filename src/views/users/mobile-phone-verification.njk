@@ -1,0 +1,55 @@
+{% extends "../layouts/main.njk" %}
+{% block header_tags %}
+  <link rel="stylesheet" href="/assets/css/intlTelInput.css"/>
+{% endblock header_tags %}
+{% block main %}
+  <main class="page hire-me-page">
+    <section class="portfolio-block hire-me" style="padding-top: 30px;">
+      <div class="container">
+        <div class="heading" style="margin-bottom: 40px;">
+          <h2 style="margin-bottom: 20px;">mobile phone verification</h2>
+          <div>
+            <div>
+              <div>
+                <div class="d-xl-flex justify-content-xl-center">
+                  <p class="text-center" style="
+                    padding-left: 15px;
+                    padding-right: 15px;
+                    margin-bottom: 20px;
+                  ">
+                    To prevent abuse, Imagenius requires you to verify your account through the use of SMS. Please select your country and enter a mobile phone number to generate an authorization code that will be sent to you instantly. If you already have an authorization code,&nbsp;<a href="#">click here</a>.
+                  </p>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center align-items-center justify-content-xl-center">
+                <form action="/accounts/verify" method="POST" id="phoneNumberForm">
+                  <div>
+                    <div style="margin-bottom: 10px;">
+                      <input type="tel" id="phone" oninput="onlyNumbers();" autofocus="" inputmode="numeric" required="true" maxlength="13" minlength="6"/>
+                    </div>
+                    <div>
+                      <button class="btn btn-sm mobile-phone-number-button" type="submit" style="padding-top: 5px; padding-bottom: 4px;">
+                        Send Verification Code
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock main %}
+{% block scripts %}
+  <!-- load input validator -->
+  <script src="/assets/js/validator.js"></script>
+  <!-- jQuery library for flags -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- load flag intlTelInput plugin -->
+  <script src="/assets/js/intlTelInput.js"></script>
+  <!-- script that gets the contry code -->
+  <script src="/assets/js/getIp.js"></script>
+  <script src="/assets/js/formatPhoneNumber.js"></script>
+{% endblock scripts %}

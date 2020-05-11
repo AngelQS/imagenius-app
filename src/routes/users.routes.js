@@ -22,6 +22,8 @@ const {
   renderSignUpForm,
   signUp,
   renderSignInForm,
+  renderPhoneNumberVerification,
+  verifyPhoneNumber,
 } = require("../controllers/user.ctrl");
 
 // Sign Up route
@@ -58,5 +60,23 @@ usersRouter
    * @path {GET} /users/signin
    */
   .get(renderSignInForm);
+
+// Account verification
+usersRouter
+  .route("/accounts/verify")
+
+  /**
+   * @description Gets the phone number verification view.
+   * @name Render Phone Number Verification
+   * @path {GET} /accounts/verify
+   */
+
+  .get(renderPhoneNumberVerification)
+  /**
+   * @description Sends the verification code to user phone number.
+   * @name Send Verification Code
+   * @path {POST} /accounts/verify
+   */
+  .post(verifyPhoneNumber);
 
 module.exports = usersRouter;

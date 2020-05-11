@@ -74,7 +74,44 @@
   margin: 0 0 0 24px;
 }
 
-*:focus {
-  outline: #47b6ff auto 5px;
+.mobile-phone-number-text {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.mobile-phone-number-input-text {
+  border: 1px solid #dbdbdb;
+  border-radius: 2.5px;
+}
+
+.mobile-phone-number-button {
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 3px;
+}
+
+.btn.btn-primary.mobile-phone-number-button-send-new-code {
+  background-color: #ffffff;
+  color: #47b6ff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.btn.btn-sm.mobile-phone-number-button-send-new-code {
+  background: #ffffff;
+  color: #47b6ff;
+  font-weight: bold;
+  font-size: 14px;
+  border: 0px;
+  border-radius: 0px;
+}
+
+.mobile-phone-number-paragraph-text {
+  font-weight: bold;
+}
+
+.error-number {
+  font-size: 100px;
+  font-weight: bold;
 }
 

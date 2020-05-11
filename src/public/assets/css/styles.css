@@ -246,3 +246,54 @@
   font-size: 28px;
 }
 
+.fas.fa-check-circle {
+  /*visibility: visible;*/
+  position: absolute;
+  top: 42.5px;
+  right: 10px;
+}
+
+.fas.fa-exclamation-circle {
+  /*visibility: visible;*/
+  position: absolute;
+  top: 42.5px;
+  right: 10px;
+}
+
+.form-group.form-style i {
+  visibility: hidden;
+}
+
+.form-group.form-style {
+  position: relative;
+}
+
+.form-control:focus {
+  display: block;
+  outline: 0;
+}
+
+.error-msg {
+  color: #e74c3c;
+  position: absolute;
+  bottom: -15px;
+  left: 0;
+  visibility: hidden;
+}
+
+.show-error-msg {
+  visibility: visible;
+}
+
+.print-success {
+  border-color: #2ecc71;
+}
+
+.print-error {
+  border-color: #e74c3c;
+}
+
+.form-control.control-style.error {
+  /*visibility: visible;*/
+}
+

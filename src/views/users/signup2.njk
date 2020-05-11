@@ -1,0 +1,78 @@
+{% extends "../layouts/main.njk" %}
+
+{% block navigation %}
+    <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient" style="padding-bottom: 0px;padding-top: 0px;padding-right: 16px;">
+        <div class="container">
+            <a class="navbar-brand logo" href="/">Imagenius
+                {{message}}</a >
+            <button data-toggle="collapse" class="navbar-toggler" data-target="#navbarNav">
+                <span class="sr-only">Toggle navigation</span >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" href="/users/signin">Sign In</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock navigation %}
+
+{% block main %}
+    <main class="page hire-me-page">
+        <section class="portfolio-block hire-me" style="padding-top: 30px;">
+            <div class="container">
+                <div class="heading" style="margin-bottom: 40px;">
+                    <h2>Sign up</h2>
+                </div>
+                <form action="/users/signup" method="POST" onsubmit="return submitFunction()">
+                    <div class="form-group form-style" id="fullnameGroup" style="padding-bottom: 10px;">
+                        <label for="subject">Fullname</label><input class="form-control control-style" type="text" id="fullname" name="fullname" onblur="fullnameValidator()">
+                        <i class="fas fa-check-circle" id="success-icon" style="color: #2ecc71;"></i>
+                        <i class="fas fa-exclamation-circle" id="error-icon" style="color: #e74c3c;"></i>
+                        <small class="error-msg" style="padding-left: 10px;"></small>
+                    </div>
+                    <div class="form-group form-style" style="padding-bottom: 10px;">
+                        <label for="subject">Username</label><input class="form-control control-style" type="text" id="username" name="username" onblur="usernameValidator()">
+                        <i class="fas fa-check-circle" id="error-icon" style="color: #2ecc71;"></i>
+                        <i class="fas fa-exclamation-circle" id="success-icon" style="color: #e74c3c;"></i>
+                        <small class="error-msg" style="padding-left: 10px;"></small>
+                    </div>
+                    <div class="form-group form-style" style="padding-bottom: 10px;">
+                        <label for="subject">Email</label><input class="form-control control-style" type="email" id="email" name="email" onblur="emailValidator()">
+                        <i class="fas fa-check-circle" id="error-icon" style="color: #2ecc71;"></i>
+                        <i class="fas fa-exclamation-circle" id="success-icon" style="color: #e74c3c;"></i>
+                        <small class="error-msg" style="padding-left: 10px;"></small>
+                    </div>
+                    <div class="form-group form-style" style="padding-bottom: 10px;">
+                        <label for="subject">Password</label><input class="form-control control-style" type="password" id="password" name="password" onblur="passwordValidator()">
+                        <i class="fas fa-check-circle" id="error-icon" style="color: #2ecc71;"></i>
+                        <i class="fas fa-exclamation-circle" id="success-icon" style="color: #e74c3c;"></i>
+                        <small class="error-msg" style="padding-left: 10px;"></small>
+                    </div>
+                    <div class="form-group form-style" style="padding-bottom: 10px;">
+                        <label for="subject">Confirm Password
+                        </label><input class="form-control control-style" type="password" id="confirmationPassword" name="confirmationPassword" onblur="confirmationPasswordValidator()">
+                        <i class="fas fa-check-circle" id="error-icon" style="color: #2ecc71;"></i>
+                        <i class="fas fa-exclamation-circle" id="success-icon" style="color: #e74c3c;"></i>
+                        <small class="error-msg" style="padding-left: 10px;"></small>
+                    </div>
+                    <div class="d-flex d-sm-flex d-md-flex justify-content-center justify-content-sm-center justify-content-md-center">
+                        <button class="btn btn-primary d-md-flex" type="submit">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+{% endblock main %}
+
+{% block scripts %}
+    <script src="/assets/js/validator.js"></script>
+    <script>
+        console.log('HOLA DESDE EL SCRIPT');
+        let accessKey = `{{key}}`
+        console.log(`${accessKey}`)
+    </script>
+{% endblock scripts %}
