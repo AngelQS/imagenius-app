@@ -166,7 +166,6 @@ userCtrl.renderPhoneNumberVerification = (req, res, next) => {
  */
 userCtrl.verifyPhoneNumber = (req, res, next) => {
   new Promise(async (resolve, reject) => {
-    console.log("PHONE NUMBER:", req.body);
     // verificar la existencia de las query middleware
     // capturar las query middleware
     // validar el token middleware

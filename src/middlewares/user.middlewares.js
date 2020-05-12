@@ -21,6 +21,7 @@ const {
    * @see {@link module:Services/Sendgrid|Sendgrid Service}
    */
   sgService,
+  lookupService,
 } = require("../services/index.service");
 const { User } = require("../models/index.model");
 
@@ -33,6 +34,10 @@ const { User } = require("../models/index.model");
  * @property {method} makeSendgridMessage Send an email to user to verify his account
  */
 const userMiddlewares = {};
+
+const accountSid = "AC1fb5a68c6d82ae704ba0ab44bb920fa2";
+const authToken = "ed20229dd052e83b69e24f8310404ebe";
+const client = require("twilio")(accountSid, authToken);
 
 userMiddlewares.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -277,8 +282,9 @@ userMiddlewares.matchQueryWithUserToken = async (req, res, next) => {
     });
 };
 
-userMiddlewares.getInputPhoneNumber = (req, res, next) => {
+userMiddlewares.phoneNumberValidation = (req, res, next) => {
   new Promise(async (resolve, reject) => {
+    console.log("getInputPhoneNumber");
     // Handle error if req.phoneNumber is null
     if (!req.body.phoneNumber) {
       return reject(Error("Unable to get request body"));
@@ -286,6 +292,19 @@ userMiddlewares.getInputPhoneNumber = (req, res, next) => {
 
     // Getting the phoneNumber from req.body.phoneNumber
     const phoneNumber = req.body.phoneNumber;
+
+    // Validating phone number
+    const status = await lookupService.lookupPhoneNumber(phoneNumber);
+
+    console.log("PASO LOOKUPSERVICE");
+
+    // Redirect if phone number is invalid
+    console.log("status:", status);
+    if (status.error) {
+      console.log("REDIRECTING");
+      req.flash("error", "Invalid phone number");
+      return res.redirect(`back`);
+    }
 
     // Resolving promise if not null
     return resolve(phoneNumber);

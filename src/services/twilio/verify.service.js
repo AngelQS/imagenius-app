@@ -1,13 +1,8 @@
 // Local
-const envVars = require("../config/env_vars.config");
+const client = require("./client");
 
-// Initialization
-const ACCOUNT_SID = envVars.TWILIO_ACCOUNT_SID;
-const AUTH_TOKEN = envVars.TWILIO_AUTH_TOKEN;
-const PHONE_NUMBER = envVars.TWILIO_PHONE_NUMBER;
-const MY_PHONE_NUMBER = "+51943656417";
-
-const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+// Initializations
+const verifyService = {};
 
 /* const sendSMS = (userPhoneNumber, verificationCode) => {
   try {

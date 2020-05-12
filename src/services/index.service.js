@@ -1,7 +1,8 @@
 const services = {
   jwtService: require("./jwt.service"),
   sgService: require("./sendgrid.service"),
-  //twilio:
+  lookupService: require("./twilio/lookup.service"),
+  //verifyService: require("./twilio/verify.service"),
 };
 
 module.exports = services;
