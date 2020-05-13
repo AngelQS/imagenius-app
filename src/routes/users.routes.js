@@ -16,7 +16,7 @@ const {
   //makeSendgridMessage,
   verifyQueries,
   matchQueryWithUserToken,
-  getInputPhoneNumber,
+  phoneNumberValidation,
 } = require("../middlewares/user.middlewares");
 
 // Initializations
@@ -80,6 +80,6 @@ usersRouter
    * @name Send Verification Code
    * @path {POST} /accounts/verify
    */
-  .post(getInputPhoneNumber, verifyPhoneNumber);
+  .post(phoneNumberValidation, verifyPhoneNumber);
 
 module.exports = usersRouter;

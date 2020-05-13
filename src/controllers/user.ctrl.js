@@ -172,7 +172,9 @@ userCtrl.verifyPhoneNumber = (req, res, next) => {
     // capturar el req.body.phoneNumber
     // enviar un mensaje de texto o llamada
   })
-    .then()
+    .then(() => {
+      return next();
+    })
     .catch((err) => {
       next(err);
     });

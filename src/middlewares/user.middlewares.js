@@ -35,10 +35,6 @@ const { User } = require("../models/index.model");
  */
 const userMiddlewares = {};
 
-const accountSid = "AC1fb5a68c6d82ae704ba0ab44bb920fa2";
-const authToken = "ed20229dd052e83b69e24f8310404ebe";
-const client = require("twilio")(accountSid, authToken);
-
 userMiddlewares.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
