@@ -5,13 +5,9 @@
  */
 
 // Local
-const {
-  jwt: jwtService,
-  //sendgrid: sendMessage,
-} = require("../config/index.config");
+const { jwt: jwtService } = require("../config/index.config");
 const { User } = require("../models/index.model");
-//const insertTokenToHTML = require('../components/email.component');
-
+const { verifyService } = require("../services/index.service");
 // Initializations
 /**
  * @namespace userCtrl
@@ -162,17 +158,30 @@ userCtrl.renderPhoneNumberVerification = (req, res, next) => {
  * @param {object} req Express Request object.
  * @param {object} res Express Response object.
  * @param {function} next Express Next middleware function.
- * @returns {Promise<numberError>} Redirects to code verification view.
+ * @returns {Promise<number|Error>} Redirects to code verification view.
  */
-userCtrl.verifyPhoneNumber = (req, res, next) => {
+userCtrl.sendTwilioVerificationCode = (req, res, next) => {
   new Promise(async (resolve, reject) => {
-    // verificar la existencia de las query middleware
-    // capturar las query middleware
-    // validar el token middleware
-    // capturar el req.body.phoneNumber
-    // enviar un mensaje de texto o llamada
+    // Handle error if req.phoneNumber is null
+    if (!req.phoneNumber) {
+      return reject(Error("Unable to get phone number on the request"));
+    }
+
+    // Getting the phone number from req.phoneNumber
+    const phoneNumner = req.phoneNumber;
+
+    // Sending the verification code
+    const message = await verifyService.sendCode(phoneNumner, "sms");
+    console.log("STATUS MESSAGE TWILIO:");
+    return resolve(phoneNumner);
   })
-    .then(() => {
+    .then((phoneNumber) => {
+      // If none errors, redirect to code verification view
+      req.flash(
+        "success",
+        `We have sent the verification code to the telephone number ${phoneNumber}`
+      );
+      res.redirect("code-verification");
       return next();
     })
     .catch((err) => {

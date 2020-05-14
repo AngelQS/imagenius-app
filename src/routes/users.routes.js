@@ -26,7 +26,7 @@ const {
   signUp,
   renderSignInForm,
   renderPhoneNumberVerification,
-  verifyPhoneNumber,
+  sendTwilioVerificationCode,
 } = require("../controllers/user.ctrl");
 
 // Sign Up route
@@ -80,6 +80,6 @@ usersRouter
    * @name Send Verification Code
    * @path {POST} /accounts/verify
    */
-  .post(phoneNumberValidation, verifyPhoneNumber);
+  .post(phoneNumberValidation, sendTwilioVerificationCode);
 
 module.exports = usersRouter;
