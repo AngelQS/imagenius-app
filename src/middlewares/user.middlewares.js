@@ -311,7 +311,36 @@ userMiddlewares.phoneNumberValidation = (req, res, next) => {
       return next();
     })
     .catch((err) => {
+      return next(err);
+    });
+};
+
+userMiddlewares.codeValidation = (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.body.verificationCode is null
+    if (!req.body.verificationCode) {
+      return reject(Error("Unable to get verification code"));
+    }
+
+    // Getting the verification code from req.body.verificationCode
+    const verificationCode = req.body.verificationCode;
+    console.log("VERIFICATION CODE:", verificationCode);
+    // Validating the code
+    if (verificationCode.length !== 4) {
+      req.flash("error", "Verification code length must not be 4");
+      return res.redirect("back");
+    }
+
+    // Resolving promise if not null
+    return resolve(verificationCode);
+  })
+    .then((verificationCode) => {
+      // Saving the verification code
+      req.verificationCode = verificationCode;
       return next();
+    })
+    .catch((err) => {
+      return next(err);
     });
 };
 

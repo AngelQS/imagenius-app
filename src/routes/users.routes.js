@@ -17,6 +17,7 @@ const {
   verifyQueries,
   matchQueryWithUserToken,
   phoneNumberValidation,
+  codeValidation,
 } = require("../middlewares/user.middlewares");
 
 // Initializations
@@ -27,6 +28,7 @@ const {
   renderSignInForm,
   renderPhoneNumberVerification,
   sendTwilioVerificationCode,
+  renderCodeVerification,
 } = require("../controllers/user.ctrl");
 
 // Sign Up route
@@ -82,4 +84,9 @@ usersRouter
    */
   .post(phoneNumberValidation, sendTwilioVerificationCode);
 
+usersRouter
+  .route("/accounts/code-verification")
+
+  .get(renderCodeVerification)
+  .post(codeValidation);
 module.exports = usersRouter;

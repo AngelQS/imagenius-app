@@ -181,12 +181,20 @@ userCtrl.sendTwilioVerificationCode = (req, res, next) => {
         "success",
         `We have sent the verification code to the telephone number ${phoneNumber}`
       );
-      res.redirect("code-verification");
+      res.redirect(`code-verification?phoneNumber=${phoneNumber}`);
       return next();
     })
     .catch((err) => {
       next(err);
     });
+};
+
+userCtrl.renderCodeVerification = (req, res, next) => {
+  try {
+    return res.render("users/code-verification3");
+  } catch (err) {
+    return next(err);
+  }
 };
 
 module.exports = userCtrl;
