@@ -16,6 +16,10 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
+    phoneNumber: {
+      type: String,
+      default: null,
+    },
     email: {
       type: String,
       required: true,

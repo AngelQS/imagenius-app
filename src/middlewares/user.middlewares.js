@@ -204,19 +204,22 @@ userMiddlewares.makeSendgridMessage = async (req, res, next) => {
     });
 };
 
-userMiddlewares.verifyQueries = (req, res, next) => {
+userMiddlewares.getParams = (req, res, next) => {
   new Promise(async (resolve, reject) => {
     // Handle error if req.query is null
-    if (!req.query.token) {
-      return reject(Error("Unable to find the query token"));
+    if (!req.params) {
+      return reject(Error("Unable to find the param token"));
     }
 
+    // Getting the token from req.params.token
+    const data = req.params;
+
     // Resolving the promise if not null
-    return resolve(req.query.token);
+    return resolve(data);
   })
-    .then((token) => {
+    .then((data) => {
       // Saving the activation token
-      req.activationToken = token;
+      req.data = data;
       return next();
     })
     .catch((err) => {
@@ -224,30 +227,27 @@ userMiddlewares.verifyQueries = (req, res, next) => {
     });
 };
 
-userMiddlewares.matchQueryWithUserToken = async (req, res, next) => {
+userMiddlewares.matchParamsWithUserToken = async (req, res, next) => {
   new Promise(async (resolve, reject) => {
-    // Handle error if req.activationToken is null
-    if (!req.activationToken) {
+    // Handle error if req.data.activationToken is null
+    if (!req.data.activationToken) {
       return reject(Error("Unable to find the activation token"));
     }
-
-    // Getting the activation token from req.activationToken
-    const activationToken = req.activationToken;
+    // Getting the activation token from req.data.activationToken
+    const activationToken = req.data.activationToken;
 
     // Decoding the token to find user
     const tokenDecoded = await jwtService.decode(activationToken);
 
-    // Throwing error if userToken does not exist
+    // Throwing error if user token does not exist
     if (!tokenDecoded) {
       return reject(Error("Unable to decode user token. Invalid user token"));
     }
 
     // Getting the decoded user data
-    const _id = tokenDecoded.data._id;
-    const username = tokenDecoded.data.username;
-    const email = tokenDecoded.data.email;
+    const { _id, username, email } = tokenDecoded.data;
 
-    // Find the activation token on User model
+    // Finding the user with activation token
     const user = await User.findOne({
       $and: [{ _id }, { username }, { email }],
     });
@@ -280,7 +280,6 @@ userMiddlewares.matchQueryWithUserToken = async (req, res, next) => {
 
 userMiddlewares.phoneNumberValidation = (req, res, next) => {
   new Promise(async (resolve, reject) => {
-    console.log("getInputPhoneNumber");
     // Handle error if req.phoneNumber is null
     if (!req.body.phoneNumber) {
       return reject(Error("Unable to get request body"));
@@ -292,14 +291,10 @@ userMiddlewares.phoneNumberValidation = (req, res, next) => {
     // Validating phone number
     const status = await lookupService.lookupPhoneNumber(phoneNumber);
 
-    console.log("PASO LOOKUPSERVICE");
-
     // Redirect if phone number is invalid
-    console.log("status:", status);
     if (status.error) {
-      console.log("REDIRECTING");
       req.flash("error", "Invalid phone number");
-      return res.redirect(`back`);
+      return res.redirect("back");
     }
 
     // Resolving promise if not null
@@ -324,10 +319,9 @@ userMiddlewares.codeValidation = (req, res, next) => {
 
     // Getting the verification code from req.body.verificationCode
     const verificationCode = req.body.verificationCode;
-    console.log("VERIFICATION CODE:", verificationCode);
     // Validating the code
-    if (verificationCode.length !== 4) {
-      req.flash("error", "Verification code length must not be 4");
+    if (verificationCode.length !== 6) {
+      req.flash("error", "Verification code length must not be 6");
       return res.redirect("back");
     }
 

@@ -17,7 +17,7 @@ verifyService.sendCode = (to, channel = "sms") => {
     };
 
     // Sending the code using using the chosen channel
-    client.verify
+    await client.verify
       .services(SERVICE_ID)
       .verifications.create(options)
       .then((data) => {
@@ -36,7 +36,6 @@ verifyService.sendCode = (to, channel = "sms") => {
     .catch((err) => {
       return err;
     });
-
   return status;
 };
 
@@ -51,7 +50,7 @@ verifyService.validateCode = (to, code) => {
     };
 
     // Checking the code
-    client.verify
+    await client.verify
       .services(SERVICE_ID)
       .verificationChecks.create(options)
       .then((data) => {

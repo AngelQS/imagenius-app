@@ -5,7 +5,7 @@
  */
 
 // Local
-const { jwt: jwtService } = require("../config/index.config");
+const { jwtService } = require("../services/index.service");
 const { User } = require("../models/index.model");
 const { verifyService } = require("../services/index.service");
 // Initializations
@@ -92,14 +92,13 @@ userCtrl.signUp = async (req, res, next) => {
       username: newUser.username.toLowerCase(),
       email: newUser.email.toLowerCase(),
     };
-
     // Saving the user
     try {
-      newUser.save();
+      await newUser.save();
       return resolve(userData);
     } catch (err) {
       req.flash("error", "Something went wrong. Please try again later");
-      return reject(Error("Unable to save new user"));
+      return reject(Error(err));
     }
   })
     .then((userData) => {
@@ -146,7 +145,8 @@ userCtrl.renderSignInForm = (req, res, next) => {
  */
 userCtrl.renderPhoneNumberVerification = (req, res, next) => {
   try {
-    return res.render("users/mobile-phone-verification");
+    const activationToken = req.data.activationToken;
+    return res.render("users/mobile-phone-verification", { activationToken });
   } catch (err) {
     return next(err);
   }
@@ -162,27 +162,44 @@ userCtrl.renderPhoneNumberVerification = (req, res, next) => {
  */
 userCtrl.sendTwilioVerificationCode = (req, res, next) => {
   new Promise(async (resolve, reject) => {
+    console.log("REQ DATA ON SEND MSG", req.data);
     // Handle error if req.phoneNumber is null
     if (!req.phoneNumber) {
       return reject(Error("Unable to get phone number on the request"));
     }
 
+    // Handle error if req.data.activationToken is null
+    if (!req.data) {
+      return reject(Error("Unable to get activation token on params"));
+    }
+
     // Getting the phone number from req.phoneNumber
-    const phoneNumner = req.phoneNumber;
+    const phoneNumber = req.phoneNumber;
+
+    // Getting the activation token from req.data.activationToken
+    const activationToken = req.data.activationToken;
 
     // Sending the verification code
-    const message = await verifyService.sendCode(phoneNumner, "sms");
-    console.log("STATUS MESSAGE TWILIO:");
-    return resolve(phoneNumner);
+    const message = await verifyService.sendCode(phoneNumber, "sms");
+    console.log("STATUS MESSAGE TWILIO:", message);
+
+    // Resolving promise if not null
+    const data = {
+      phoneNumber,
+      activationToken,
+    };
+    return resolve(data);
   })
-    .then((phoneNumber) => {
+    .then((data) => {
       // If none errors, redirect to code verification view
+      console.log("REQ.FLASH IMPRIMIENDO MENSAJE FLASH");
       req.flash(
         "success",
-        `We have sent the verification code to the telephone number ${phoneNumber}`
+        `We have sent the verification code to the telephone number ${data.phoneNumber}`
       );
-      res.redirect(`code-verification?phoneNumber=${phoneNumber}`);
-      return next();
+      return res.redirect(
+        `/user/account/verify/${data.activationToken}/code_verify`
+      );
     })
     .catch((err) => {
       next(err);
@@ -191,10 +208,55 @@ userCtrl.sendTwilioVerificationCode = (req, res, next) => {
 
 userCtrl.renderCodeVerification = (req, res, next) => {
   try {
-    return res.render("users/code-verification3");
+    console.log("REQUEST PARAMS ON VERIFICATION:", req.data);
+    const activationToken = req.data.activationToken;
+    return res.render("users/code-verification3", { activationToken });
   } catch (err) {
     return next(err);
   }
+};
+
+userCtrl.verifyAccount = (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.data.activationToken is null
+    if (!req.data) {
+      return reject(Error("Unable to get verification code on the request"));
+    }
+    console.log("DATA ON VERIFY ACCOUNT:", req.data);
+    // Getting the activation token from req.data.activationToken
+    const activationToken = req.data.activationToken;
+    console.log("ACTIVATION TOKEN ON VERIFY ACCOUNT:", activationToken);
+    // Decoding the
+    const tokenDecoded = await jwtService.decode(activationToken);
+    // Throwing error if user token does not exist
+    if (!tokenDecoded) {
+      return reject(Error("Unable to decode user token. Invalid user token"));
+    }
+
+    // Getting the decoded user data
+    const { _id, username, email } = tokenDecoded.data;
+
+    // Finding the user with activation token
+    const user = await User.findOneAndUpdate(
+      {
+        $and: [{ _id }, { username }, { email }],
+      },
+      { isVerified: true }
+    );
+    console.log("USER:", user);
+    // Handle error if user does not exist
+    if (!user) {
+      return reject(Error("Unable to find user. It does not exist"));
+    }
+
+    return resolve();
+  })
+    .then(() => {
+      return res.redirect("signin");
+    })
+    .catch((err) => {
+      return next(err);
+    });
 };
 
 module.exports = userCtrl;

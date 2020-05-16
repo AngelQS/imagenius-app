@@ -14,8 +14,8 @@ const {
   generateToken,
   makeSendgridMessage,
   //makeSendgridMessage,
-  verifyQueries,
-  matchQueryWithUserToken,
+  getParams,
+  matchParamsWithUserToken,
   phoneNumberValidation,
   codeValidation,
 } = require("../middlewares/user.middlewares");
@@ -29,6 +29,7 @@ const {
   renderPhoneNumberVerification,
   sendTwilioVerificationCode,
   renderCodeVerification,
+  verifyAccount,
 } = require("../controllers/user.ctrl");
 
 // Sign Up route
@@ -68,7 +69,7 @@ usersRouter
 
 // Account verification
 usersRouter
-  .route("/accounts/verify")
+  .route("/user/account/verify/:activationToken")
 
   /**
    * @description Gets the phone number verification view.
@@ -76,17 +77,18 @@ usersRouter
    * @path {GET} /accounts/verify
    */
 
-  .get(verifyQueries, matchQueryWithUserToken, renderPhoneNumberVerification)
+  .get(getParams, matchParamsWithUserToken, renderPhoneNumberVerification)
   /**
    * @description Sends the verification code to user phone number.
    * @name Send Verification Code
    * @path {POST} /accounts/verify
    */
-  .post(phoneNumberValidation, sendTwilioVerificationCode);
+  .post(getParams, phoneNumberValidation, sendTwilioVerificationCode);
 
 usersRouter
-  .route("/accounts/code-verification")
+  .route("/user/account/verify/:activationToken/code_verify")
 
-  .get(renderCodeVerification)
-  .post(codeValidation);
+  .get(getParams, renderCodeVerification)
+  .post(getParams, codeValidation, verifyAccount);
+
 module.exports = usersRouter;
