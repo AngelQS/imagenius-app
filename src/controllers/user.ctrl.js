@@ -197,8 +197,9 @@ userCtrl.sendTwilioVerificationCode = (req, res, next) => {
         "success",
         `We have sent the verification code to the telephone number ${data.phoneNumber}`
       );
+      console.log("REDIRECCIONANDO");
       return res.redirect(
-        `/user/account/verify/${data.activationToken}/code_verify`
+        `/user/account/verify/${data.activationToken}/code_verify?pn=${data.phoneNumber}`
       );
     })
     .catch((err) => {
@@ -210,7 +211,12 @@ userCtrl.renderCodeVerification = (req, res, next) => {
   try {
     console.log("REQUEST PARAMS ON VERIFICATION:", req.data);
     const activationToken = req.data.activationToken;
-    return res.render("users/code-verification3", { activationToken });
+    const phoneNumber = req.phoneNumber;
+    const data = {
+      activationToken,
+      phoneNumber,
+    };
+    return res.render("users/code-verification3", { data });
   } catch (err) {
     return next(err);
   }
@@ -222,10 +228,8 @@ userCtrl.verifyAccount = (req, res, next) => {
     if (!req.data) {
       return reject(Error("Unable to get verification code on the request"));
     }
-    console.log("DATA ON VERIFY ACCOUNT:", req.data);
     // Getting the activation token from req.data.activationToken
     const activationToken = req.data.activationToken;
-    console.log("ACTIVATION TOKEN ON VERIFY ACCOUNT:", activationToken);
     // Decoding the
     const tokenDecoded = await jwtService.decode(activationToken);
     // Throwing error if user token does not exist
@@ -243,7 +247,6 @@ userCtrl.verifyAccount = (req, res, next) => {
       },
       { isVerified: true }
     );
-    console.log("USER:", user);
     // Handle error if user does not exist
     if (!user) {
       return reject(Error("Unable to find user. It does not exist"));
@@ -252,7 +255,8 @@ userCtrl.verifyAccount = (req, res, next) => {
     return resolve();
   })
     .then(() => {
-      return res.redirect("signin");
+      req.flash("success", "Your account has been verified, you can sign in");
+      return res.redirect("/users/signin");
     })
     .catch((err) => {
       return next(err);

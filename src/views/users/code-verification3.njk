@@ -21,7 +21,7 @@
               </div>
               <div class="d-flex justify-content-center align-items-center justify-content-xl-center">
                 <div>
-                  <form action="/user/account/verify/{{activationToken}}/code_verify" method="POST" id="codeVerificationForm">
+                  <form action="/user/account/verify/{{data.activationToken}}/code_verify?pn={{data.phoneNumber}}" method="POST" id="codeVerificationForm">
                     <div>
                       <p class="mobile-phone-number-text" style="padding-left: 0px; margin-bottom: 5px;">
                         Verification Code

@@ -22,6 +22,7 @@ const {
    */
   sgService,
   lookupService,
+  verifyService,
 } = require("../services/index.service");
 const { User } = require("../models/index.model");
 
@@ -179,13 +180,20 @@ userMiddlewares.makeSendgridMessage = async (req, res, next) => {
     if (!req.verificationToken) {
       return reject(Error("Unable to send Sendgrid message"));
     }
+
+    // Handle error if req.tokenPayload is null
+    if (!req.tokenPayload) {
+      return reject(Error("Unable to get token payload on request"));
+    }
+
     // Getting verification token from req.verificationToken
     const verificationToken = req.verificationToken;
+
+    // Getting user email from req.tokenPayload
+    const email = req.tokenPayload.email;
+
     // Making sendgrid message
-    const messageStatus = sgService.sendMessage(
-      "developer.aqs@gmail.com",
-      verificationToken
-    );
+    const messageStatus = sgService.sendMessage(email, verificationToken);
     // Validating the result
     if (!messageStatus) {
       return reject(Error("Unable to make Sendgrid message"));
@@ -319,6 +327,7 @@ userMiddlewares.codeValidation = (req, res, next) => {
 
     // Getting the verification code from req.body.verificationCode
     const verificationCode = req.body.verificationCode;
+
     // Validating the code
     if (verificationCode.length !== 6) {
       req.flash("error", "Verification code length must not be 6");
@@ -331,6 +340,73 @@ userMiddlewares.codeValidation = (req, res, next) => {
     .then((verificationCode) => {
       // Saving the verification code
       req.verificationCode = verificationCode;
+      return next();
+    })
+    .catch((err) => {
+      return next(err);
+    });
+};
+
+userMiddlewares.getQueries = (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.query.pn is null
+    if (!req.query.pn) {
+      return reject(Error("Unable to get phone number on the query"));
+    }
+
+    // Getting the phone number from req.query.pn
+    const phoneNumber = `+${req.query.pn.trim()}`;
+
+    console.log(
+      "IMPRIMIENDO QUERY DESDE EL PN LLLLLLLLLLLLLLLLL:",
+      req.query.pn
+    );
+    // Resolving promise if not null
+    return resolve(phoneNumber);
+  })
+    .then((phoneNumber) => {
+      req.phoneNumber = phoneNumber;
+      return next();
+    })
+    .catch((err) => {
+      return next(err);
+    });
+};
+
+userMiddlewares.verifyTwilioVerificationCode = (req, res, next) => {
+  new Promise(async (resolve, reject) => {
+    // Handle error if req.verificationCode is null
+    if (!req.verificationCode) {
+      return reject(Error("Unable to get verification code on request"));
+    }
+
+    // Handle error if req.phoneNumber is null
+    if (!req.phoneNumber) {
+      return reject(Error("Unable to get phoneNumber on the request"));
+    }
+
+    // Getting the verification code from req.verificationCode
+    const verificationCode = req.verificationCode;
+
+    // Getting the phone number from req.phoneNumber
+    const phoneNumber = req.phoneNumber;
+
+    console.log(
+      "VERIFICANDO NUMERO ANTES DE ENVIARLO XXXXXXXXXXXXXXXX:",
+      phoneNumber
+    );
+    // Verifying the code
+    const message = await verifyService.validateCode(
+      phoneNumber,
+      verificationCode
+    );
+
+    console.log("MESSAGE OF VERIFICATION CODE ????????", message);
+
+    return resolve(message);
+  })
+    .then((verificationStatus) => {
+      req.verificationStatus = verificationStatus;
       return next();
     })
     .catch((err) => {

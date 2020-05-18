@@ -39,7 +39,7 @@ sgService.sendMessage = async (to, token) => {
     // Inserting token to email verification page
     const html = insertTokenToHTML(token);
     const msg = {
-      to: "developer.aqs@gmail.com",
+      to,
       from: "aedwin.acuario31@gmail.com",
       subject: "Email verification",
       text: "Verify your Imagenius account",

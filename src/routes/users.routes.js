@@ -15,9 +15,11 @@ const {
   makeSendgridMessage,
   //makeSendgridMessage,
   getParams,
+  getQueries,
   matchParamsWithUserToken,
   phoneNumberValidation,
   codeValidation,
+  verifyTwilioVerificationCode,
 } = require("../middlewares/user.middlewares");
 
 // Initializations
@@ -88,7 +90,13 @@ usersRouter
 usersRouter
   .route("/user/account/verify/:activationToken/code_verify")
 
-  .get(getParams, renderCodeVerification)
-  .post(getParams, codeValidation, verifyAccount);
+  .get(getParams, getQueries, renderCodeVerification)
+  .post(
+    getParams,
+    getQueries,
+    codeValidation,
+    verifyTwilioVerificationCode,
+    verifyAccount
+  );
 
 module.exports = usersRouter;
